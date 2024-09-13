@@ -118,6 +118,9 @@ int main() {
                 string input;
                 getline(cin, input);
                 Polynomial other(input);
+                cout << "Your input was ";
+                other.print();
+                cout << endl;
                 // if (other.head == nullptr || other.head->coefficient != 1) {
                 //     cout << "The leading coefficient of the divisor polynomial must be 1." << endl;
                 // } else {
