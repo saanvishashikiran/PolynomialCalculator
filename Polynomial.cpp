@@ -38,10 +38,27 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
 
 //copy constructor
 Polynomial::Polynomial(const Polynomial& other) : head(nullptr) {
-    Node* current = other.head;
-    while (current != nullptr) {
-        insert(current->coefficient, current->exponent);
-        current = current->next;
+    // Node* current = other.head;
+
+    // while (current != nullptr) {
+    //     insert(current->coefficient, current->exponent);
+    //     current = current->next;
+    // }
+
+    if (other.head == nullptr)
+    {
+        return;
+    }
+
+    head = new Node(other.head->coefficient, other.head->exponent);
+    Node* currentOther = other.head->next;
+    Node* currentThis = head;
+
+    while (currentOther != nullptr)
+    {
+        currentThis->next = new Node(currentOther->coefficient, currentOther->exponent);
+        currentThis = currentThis->next;
+        currentOther = currentOther->next;
     }
 }
 
@@ -416,7 +433,7 @@ void Polynomial::print() const
                 cout << "x";
                 if (current->exponent > 1)
                 {
-                    cout << current->exponent;
+                    cout << "^" << current->exponent;
                 }
             }
         }
