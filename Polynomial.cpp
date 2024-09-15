@@ -17,6 +17,10 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
     {
         int coefficient, exponent;
         iss >> coefficient >> exponent;
+        if (!(iss >> coefficient >> exponent)) {
+            cout << "ERROR: Invalid term input!" << endl;
+            return;
+        }
         if (coefficient != 0)
         {
             Node* newNode = new Node(coefficient, exponent);
@@ -410,7 +414,7 @@ Polynomial& Polynomial::operator=(const Polynomial& other)
 void Polynomial::print() const 
 {
     if (!head) {
-        cout << "1 0 0" << endl; //printing "1 0 0" for polynomials initialized to zero
+        cout << "0" << endl; //printing "1 0 0" for polynomials initialized to zero
     }
 
     Node* current = head;

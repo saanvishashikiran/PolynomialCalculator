@@ -13,8 +13,18 @@ int main() {
     
     while (true) {
         cout << "> ";  //promping for user input
-        cin >> command;
-        cin.ignore();  //ignoring any remaining newline characters in the input buffer
+        // cin >> command;
+        // cin.ignore();  //ignoring any remaining newline characters in the input buffer
+        
+        getline(cin, command);
+
+        size_t start = command.find_first_not_of(" \t");
+        if (start == string::npos) {
+            command = "";  // case where the command is all spaces
+        } else {
+            size_t end = command.find_last_not_of(" \t");
+            command = command.substr(start, end - start + 1);
+        }
         
         if (command == "ZERO") {
             delete polynomial1;
@@ -26,7 +36,7 @@ int main() {
             getline(cin, input); // Read the rest of the line for polynomial input
             if (polynomial1) delete polynomial1; // Clean up previous polynomial if needed
             polynomial1 = new Polynomial(input);   
-            cout << "TEST: This is your input" << endl;
+            cout << "This is your input" << endl;
             polynomial1->print();         
         } else if (command == "PRINT") {
             if (polynomial1) 
