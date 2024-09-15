@@ -38,7 +38,6 @@ private:
 
     void clear(); //function to delete all nodes
     void insert(int coefficient, int exponent);
-    void combine(const Polynomial& other, int sign);
     //int evaluationCalc(int x) const;
     //probably dont need these
     // Polynomial* addOrSubtract(Polynomial* other, bool addition);
