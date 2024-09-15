@@ -17,10 +17,6 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
     {
         int coefficient, exponent;
         iss >> coefficient >> exponent;
-        if (!(iss >> coefficient >> exponent)) {
-            cout << "ERROR: Invalid term input!" << endl;
-            return;
-        }
         if (coefficient != 0)
         {
             Node* newNode = new Node(coefficient, exponent);
