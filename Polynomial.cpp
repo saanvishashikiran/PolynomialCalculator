@@ -147,21 +147,11 @@ void Polynomial::insert(int coefficient, int exponent)
 
 
 
-//implementing public methods
 
-//overloaded addition operator
-Polynomial& Polynomial::operator+=(const Polynomial& other) 
+//combining polynomials helper function
+
+void Polynomial::combine(const Polynomial& other, int sign)
 {
-    // Node* current = other.head;
-
-    // while (current != nullptr)
-    // {
-    //     insert(current->coefficient, current->exponent);
-    //     current = current->next;
-    // }
-    
-    // return *this;
-
     Node* current1 = head;
     Node* current2 = other.head;
     Node* prev = nullptr;
@@ -235,6 +225,101 @@ Polynomial& Polynomial::operator+=(const Polynomial& other)
         prev = newNode;
         current2 = current2->next;
     }
+}
+
+
+
+//implementing public methods
+
+//overloaded addition operator
+Polynomial& Polynomial::operator+=(const Polynomial& other) 
+{
+    combine(other, 1);
+    return *this;
+    
+    // Node* current = other.head;
+
+    // while (current != nullptr)
+    // {
+    //     insert(current->coefficient, current->exponent);
+    //     current = current->next;
+    // }
+    
+    // return *this;
+
+    // Node* current1 = head;
+    // Node* current2 = other.head;
+    // Node* prev = nullptr;
+
+    // while (current1 != nullptr && current2 != nullptr)
+    // {   
+    //     if (current1->exponent > current2->exponent)
+    //     {
+    //         prev = current1;
+    //         current1 = current1->next;
+    //     }
+    //     else if (current1->exponent < current2->exponent)
+    //     {
+    //         Node* newNode = new Node(current2->coefficient, current2->exponent);
+    //         if (prev != nullptr)
+    //         {
+    //             prev->next = newNode;
+    //         }
+    //         else 
+    //         {
+    //             head = newNode;
+    //         }
+    //         newNode->next = current1;
+    //         prev = newNode;
+    //         current2 = current2->next;
+    //     }
+    //     else 
+    //     {
+    //         current1->coefficient += current2->coefficient;
+    //         if (current1->coefficient == 0)
+    //         {
+    //             //skipping over this since the coefficient is now 0
+    //             if (prev != nullptr)
+    //             {
+    //                 prev->next = current1->next;
+    //             }
+    //             else
+    //             {
+    //                 head = current1->next;
+    //             }
+    //             delete current1;
+    //             if (prev != nullptr) 
+    //             {
+    //                 current1 = prev->next;
+    //             } 
+    //             else 
+    //             {
+    //                 current1 = head;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             prev = current1;
+    //             current1 = current1->next;
+    //         }
+    //         current2 = current2->next;
+    //     }
+    // }
+
+    // while (current2 != nullptr) 
+    // {
+    //     Node* newNode = new Node(current2->coefficient, current2->exponent);
+    //     if (prev != nullptr) 
+    //     {
+    //         prev->next = newNode;
+    //     } 
+    //     else 
+    //     {
+    //         head = newNode;
+    //     }
+    //     prev = newNode;
+    //     current2 = current2->next;
+    // }
 
     return *this;
 
