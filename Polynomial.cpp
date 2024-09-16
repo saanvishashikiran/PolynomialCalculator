@@ -214,7 +214,7 @@ void Polynomial::cleanup() {
 //implementing public methods
 
 //overloaded addition operator
-Polynomial& Polynomial::operator+=(const Polynomial& other) 
+Polynomial& Polynomial::operator+(const Polynomial& other) 
 {
     // Node* current = other.head;
 
@@ -535,16 +535,61 @@ void Polynomial::print() const
 
 
 
-//evaluate function
-int Polynomial::evaluate(int x) const 
+void Polynomial::printInput(const std::string& input)
 {
+    istringstream iss(input);
+    int numberOfTerms;
+    iss >> numberOfTerms; //reading the number of terms
+
+    Polynomial tempPoly; // Temporary polynomial to construct from input
+
+    for (int i = 0; i < numberOfTerms; ++i) 
+    {
+        int coefficient, exponent;
+        iss >> coefficient >> exponent; // Read coefficient and exponent
+        tempPoly.insert(coefficient, exponent); // Use the insert function to add terms to the polynomial
+    }
+
+    // Now print the constructed polynomial
+    tempPoly.cleanup();
+    tempPoly.print(); // Call the existing print method
+}
+
+
+//evaluate function
+int Polynomial::evaluate(const std::string& input) const 
+{
+    istringstream iss(input);
+    int numberOfTerms, x;
+
+    iss >> numberOfTerms;
+
+    Polynomial tempPoly;
+
     int evaluatedPoly = 0;
-    Node* current = head;
+
+    for (int i = 0; i < numberOfTerms; i++)
+    {
+        int coefficient, exponent;
+        iss >> coefficient >> exponent;
+
+        tempPoly.insert(coefficient, exponent);
+        // tempPoly.cleanup();
+        
+        // int evaluatedTerm = coefficient * pow(x, exponent);
+        // evaluatedPoly += evaluatedTerm;
+    }
+
+    iss >> x;
+
+    tempPoly.cleanup();
+
+    Node* current = tempPoly.head;
 
     while (current)
     {
         int evaluatedTerm = current->coefficient * pow(x, current->exponent);
-        evaluatedPoly += evaluatedTerm;
+        evaluatedPoly += evaluatedTerm; 
         current = current->next;
     }
 

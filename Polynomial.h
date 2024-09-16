@@ -55,14 +55,15 @@ public:
     ~Polynomial(); //destructor
 
     //overloaded operators
-    Polynomial& operator+=(const Polynomial& other);
+    Polynomial& operator+(const Polynomial& other);
     Polynomial& operator-=(const Polynomial& other);
     Polynomial& operator*=(const Polynomial& other);
     Polynomial& operator=(const Polynomial& other);
 
     //methods
     void print() const;
-    int evaluate(int x) const;
+    void printInput(const std::string& input);
+    int evaluate(const std::string& input) const;
     Polynomial* exponentiate(int n);
     Polynomial* modulus(Polynomial& other);
     void addNode(int coeff, int exp);

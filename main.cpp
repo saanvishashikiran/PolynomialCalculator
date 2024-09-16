@@ -39,24 +39,39 @@ int main() {
             cout << "This is your input" << endl;
             polynomial1->print();         
         } else if (command == "PRINT") {
+            cout << "Enter the polynomial you would like to print: " << endl;
+            string input;
+            getline(cin, input);
+            polynomial1 = new Polynomial(input);
+            cout << "This is your input!" << endl;
             if (polynomial1) 
             {
-                polynomial1->print();
+                polynomial1->printInput(input);
             }
             else 
             {
                 cout << "No polynomial to print." << endl;
             }
         } else if (command == "EVAL") {
-           if(polynomial1)
-           {
-            int x; 
-            cout << "Enter an x value: " << endl;
-            cin >> x;
-            cin.ignore();
-            int result = polynomial1->evaluate(x);
+            cout << "Enter the polynomial you would like to evaluate and the x value you want evaluate at." << endl;
+            string input;
+            getline(cin, input);
+            std::string polynomialPart = input.substr(0, input.find_last_of(' '));
+            int x = std::stoi(input.substr(input.find_last_of(' ') + 1)); // Extract x from input
+
+            Polynomial polynomial(polynomialPart); // Initialize polynomial
+            int result = polynomial.evaluate(polynomialPart); // Evaluate using the polynomial part
             cout << "Your polynomial evaluated at " << x << " is " << result << endl;
-           } 
+            // Polynomial polynomial(input);
+            // if(polynomial)
+            // {
+            //     int result = polynomial1->evaluate(input);
+            //     cout << "Your polynomial evaluated at " << input.substr(input.find_last_of(' ') + 1) << " is " << result << endl;
+            // } 
+            // else
+            // {
+            //     cout << "No polynomial to evaluate." << endl;
+            // }
         } else if (command == "ADD") {
             string input;
             cout << "Enter polynomial to add:" << endl;
