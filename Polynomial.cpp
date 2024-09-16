@@ -92,6 +92,7 @@ void Polynomial::clear()
 //inserting a term helper function
 void Polynomial::insert(int coefficient, int exponent) 
 {
+    //initializing a new node
     Node* newNode = new Node(coefficient, exponent);
     
     //insert at front if list is empty or if exponent is greater than the first term (greatest 1st)
@@ -99,52 +100,157 @@ void Polynomial::insert(int coefficient, int exponent)
     {
         newNode->next = head;
         head = newNode;
+        if (tail == nullptr)
+        {
+            tail = newNode;
+        }
+        return;
+    }
+    
+    //inserting at the end when the list is not empty
+    if (tail != nullptr)
+    {
+        tail->next = newNode;
+        tail = newNode;
+    }
+    else
+    {
+        head = tail = newNode; //if tail is nullptr both head and tail must point to newNode
+    }
+
+    // //creating pointers to linked list
+    // Node* current = head;
+    // Node* previous = nullptr;
+
+    // //traversing to search for insertion point (this makes the function O(n))
+    // while (current != nullptr && current->exponent > exponent)
+    // {
+    //     previous = current;
+    //     current = current->next;
+    // }
+
+    // if (current != nullptr && current->exponent == exponent)
+    // {
+    //     current->coefficient += coefficient;
+    //     delete newNode;
+    //     if (current->coefficient == 0)
+    //     {
+    //         //removing node if coefficient changes to 0
+    //         if (previous != nullptr)
+    //         {
+    //             previous->next = current->next; //if there is a previous node
+    //         }
+    //         else
+    //         {
+    //             head = current->next; //if the node is first
+    //         }
+    //         delete current;
+    //     }
+    // }
+    // else //handles the case where the new term needs to be inserted into the list w/o replacing an existing term
+    // {
+    //     newNode->next = current;
+    //     if (previous != nullptr)
+    //     {
+    //         previous->next = newNode;
+    //     }
+    //     else //if previous is nullptr
+    //     {
+    //         head = newNode;
+    //     }
+    // }
+}
+
+
+
+//clean-up helper function
+
+void Polynomial::cleanup()
+{
+    if (head == nullptr)
+    {
+        tail = nullptr;
         return;
     }
 
-    //creating pointers to linked list
     Node* current = head;
-    Node* previous = nullptr;
 
-    //traversing to search for insertion point (this makes the function O(n))
-    while (current != nullptr && current->exponent > exponent)
+    while (current != nullptr)
     {
-        previous = current;
-        current = current->next;
-    }
+        Node* comparisonNode = current->next;
+        Node* prev = current;
 
-    if (current != nullptr && current->exponent == exponent)
-    {
-        current->coefficient += coefficient;
-        delete newNode;
-        if (current->coefficient == 0)
+        //traversing list in order to combine like terms
+        while (comparisonNode != nullptr)
         {
-            //removing node if coefficient changes to 0
-            if (previous != nullptr)
+            if (comparisonNode->exponent == current->exponent)
             {
-                previous->next = current->next; //if there is a previous node
+                //combining coefficients for like terms (same exponent degree!)
+                current->coefficient += comparisonNode->coefficient;
+                // Node* temp = comparisonNode;
+                // comparisonNode = comparisonNode->next;
+                // delete temp;
+
+                //removing node if the coefficient has become 0
+                if (current->coefficient == 0)
+                {
+                    if (prev == current) //removing the head node if the head's coefficient is 0
+                    {
+                        head = current->next;
+                        delete current;
+                        current = head;
+                    }
+                    else //removing a node that is not the head if its coefficient is 0
+                    {
+                        prev->next = current->next;
+                        delete current;
+                        current = prev->next;
+                    }
+                    
+                    //updating tail if the list is now empty
+                    if (head == nullptr)
+                    {
+                        tail = nullptr;
+                        return;
+                    }
+
+                    //continuing from previous node
+                    break;
+                }
+
+                //moving onto next node
+                comparisonNode = current->next;
             }
             else
             {
-                head = current->next; //if the node is first
+                comparisonNode = comparisonNode->next;
             }
-            delete current;
+        }
+        
+        //moving onto next node
+        if (current != nullptr)
+        {
+            prev = current;
+            current = current->next;
         }
     }
-    else //handles the case where the new term needs to be inserted into the list w/o replacing an existing term
-    {
-        newNode->next = current;
-        if (previous != nullptr)
-        {
-            previous->next = newNode;
-        }
-        else //if previous is nullptr
-        {
-            head = newNode;
-        }
-    }
-}
 
+    //updating the tail pointer so that it points to the last node
+    if (head == nullptr)
+    {
+        tail = nullptr;
+    }
+    else
+    {
+        Node* temp = head;
+        while (temp->next != nullptr)
+        {
+            temp = temp->next;
+        }
+        tail = temp;
+    }
+
+}
 
 
 //implementing public methods

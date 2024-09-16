@@ -35,9 +35,11 @@ public:
 class Polynomial {
 private:
     Node* head;
+    Node* tail;
 
     void clear(); //function to delete all nodes
     void insert(int coefficient, int exponent);
+    void cleanup();
     //int evaluationCalc(int x) const;
     //probably dont need these
     // Polynomial* addOrSubtract(Polynomial* other, bool addition);
