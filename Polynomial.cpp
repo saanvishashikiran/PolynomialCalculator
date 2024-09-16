@@ -91,7 +91,7 @@ void Polynomial::clear()
 
 //inserting a term helper function
 void Polynomial::insert(int coefficient, int exponent) 
-{
+{   
     //initializing a new node
     Node* newNode = new Node(coefficient, exponent);
     
@@ -163,94 +163,163 @@ void Polynomial::insert(int coefficient, int exponent)
 
 
 
-//clean-up helper function
+// //clean-up helper function
 
-void Polynomial::cleanup()
-{
-    if (head == nullptr)
-    {
+//this version is not working, re-wrote below
+// void Polynomial::cleanup()
+// {
+//     if (head == nullptr)
+//     {
+//         tail = nullptr;
+//         return;
+//     }
+
+//     Node* current = head;
+
+//     while (current != nullptr)
+//     {
+//         Node* comparisonNode = current->next;
+//         Node* prev = current;
+
+//         //traversing list in order to combine like terms
+//         while (comparisonNode != nullptr)
+//         {
+//             if (comparisonNode->exponent == current->exponent)
+//             {
+//                 //combining coefficients for like terms (same exponent degree!)
+//                 current->coefficient += comparisonNode->coefficient;
+//                 Node* temp = comparisonNode;
+//                 comparisonNode = comparisonNode->next;
+//                 delete temp;
+
+//                 //removing node if the coefficient has become 0
+//                 if (current->coefficient == 0)
+//                 {
+//                     if (prev == current) //removing the head node if the head's coefficient is 0
+//                     {
+//                         head = current->next;
+//                         delete current;
+//                         current = head;
+//                     }
+//                     else //removing a node that is not the head if its coefficient is 0
+//                     {
+//                         prev->next = current->next;
+//                         delete current;
+//                         current = prev->next;
+//                     }
+                    
+//                     //updating tail if the list is now empty
+//                     if (head == nullptr)
+//                     {
+//                         tail = nullptr;
+//                     }
+
+//                     //continuing from previous node
+//                     break;
+//                 }
+//                 //moving onto next node
+//                 else 
+//                 {
+//                     comparisonNode = current->next;
+//                 }
+//             }
+//             else
+//             {
+//                 comparisonNode = comparisonNode->next;
+//             }
+//         }
+        
+//         //moving onto next node
+//         if (current != nullptr)
+//         {
+//             prev = current;
+//             current = current->next;
+//         }
+//     }
+
+//     //updating the tail pointer so that it points to the last node
+//     if (head == nullptr)
+//     {
+//         tail = nullptr;
+//     }
+//     else
+//     {
+//         Node* temp = head;
+//         while (temp->next != nullptr)
+//         {
+//             temp = temp->next;
+//         }
+//         tail = temp;
+//     }
+
+// }
+
+
+
+void Polynomial::cleanup() {
+    if (head == nullptr) {
         tail = nullptr;
         return;
     }
 
     Node* current = head;
+    Node* prev = nullptr;
 
-    while (current != nullptr)
-    {
-        Node* comparisonNode = current->next;
-        Node* prev = current;
+    //traversing list in order to combine like terms
+    while (current != nullptr) {
+        prev = current;
+        Node* inner = current->next;
 
-        //traversing list in order to combine like terms
-        while (comparisonNode != nullptr)
-        {
-            if (comparisonNode->exponent == current->exponent)
-            {
-                //combining coefficients for like terms (same exponent degree!)
-                current->coefficient += comparisonNode->coefficient;
-                // Node* temp = comparisonNode;
-                // comparisonNode = comparisonNode->next;
-                // delete temp;
+        while (inner != nullptr) {
+            if (inner->exponent == current->exponent) {
+                //combining like terms
+                current->coefficient += inner->coefficient;
 
-                //removing node if the coefficient has become 0
-                if (current->coefficient == 0)
-                {
-                    if (prev == current) //removing the head node if the head's coefficient is 0
-                    {
-                        head = current->next;
-                        delete current;
-                        current = head;
-                    }
-                    else //removing a node that is not the head if its coefficient is 0
-                    {
-                        prev->next = current->next;
-                        delete current;
-                        current = prev->next;
-                    }
-                    
-                    //updating tail if the list is now empty
-                    if (head == nullptr)
-                    {
-                        tail = nullptr;
-                        return;
-                    }
-
-                    //continuing from previous node
-                    break;
-                }
-
-                //moving onto next node
-                comparisonNode = current->next;
-            }
-            else
-            {
-                comparisonNode = comparisonNode->next;
+                //removing the redundant node
+                prev->next = inner->next;
+                delete inner;
+                inner = prev->next;
+            } else {
+                prev = inner;
+                inner = inner->next;
             }
         }
-        
-        //moving onto next node
-        if (current != nullptr)
-        {
-            prev = current;
+
+        current = current->next;
+    }
+
+    //removing nodes with zero coefficient
+    current = head;
+    Node* prevNode = nullptr;
+    while (current != nullptr) {
+        if (current->coefficient == 0) {
+            if (current == head) {
+                head = current->next;
+                delete current;
+                current = head;
+            } else {
+                prevNode->next = current->next;
+                delete current;
+                current = prevNode->next;
+            }
+        } else {
+            prevNode = current;
             current = current->next;
         }
     }
 
-    //updating the tail pointer so that it points to the last node
-    if (head == nullptr)
-    {
+    //updating the tail pointer
+    if (head == nullptr) {
         tail = nullptr;
-    }
-    else
-    {
+    } else {
         Node* temp = head;
-        while (temp->next != nullptr)
-        {
+        while (temp->next != nullptr) {
             temp = temp->next;
         }
         tail = temp;
     }
-
 }
+
 
 
 //implementing public methods
@@ -452,7 +521,9 @@ Polynomial& Polynomial::operator-=(const Polynomial& other)
 Polynomial& Polynomial::operator*=(const Polynomial& other) 
 {
     Polynomial polynomial1(*this); //copying original polynomial
+
     clear(); //clearing original polynomial
+
     Node* current1 = polynomial1.head; //pointer to original polyomial
 
     while (current1 != nullptr)
@@ -460,12 +531,19 @@ Polynomial& Polynomial::operator*=(const Polynomial& other)
         Node* current2 = other.head;
         while (current2 != nullptr) // moving through linked lists and multiplying terms
         {
-            insert(current1->coefficient * current2->coefficient, current1->exponent + current2->exponent); 
+            //insert(current1->coefficient * current2->coefficient, current1->exponent + current2->exponent); 
+            int newCoefficient = current1->coefficient * current2->coefficient;
+            int newExponent = current1->exponent + current2->exponent;
+
+            insert(newCoefficient, newExponent);
+
             current2 = current2->next;
         }
+       
         current1 = current1->next;
     }
 
+    cleanup();
     return *this; //original has been modified!
     // Polynomial temp;
     // Node* current1 = head;
@@ -499,12 +577,15 @@ Polynomial& Polynomial::operator=(const Polynomial& other)
     if (this != &other)
     {
         clear();
+
         Node* current = other.head;
         while (current != nullptr)
         {
             insert(current->coefficient, current->exponent);
             current = current->next;
         }
+
+        //cleanup();
     }
 
     return *this;
@@ -686,8 +767,11 @@ Polynomial* Polynomial::modulus(Polynomial& other)
         }
 
         remainder -= multiple;
+        //remainder.cleanup();
     }
     *this = remainder;
+    //cleanup();
+
     return this;
    
     // //change this so that mod returns the original polynomial with modifications
