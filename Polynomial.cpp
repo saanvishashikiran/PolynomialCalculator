@@ -87,79 +87,154 @@ void Polynomial::clear()
     head = nullptr;
 }
 
-
-
-//inserting a term helper function
-void Polynomial::insert(int coefficient, int exponent) 
-{   
-    //initializing a new node
-    Node* newNode = new Node(coefficient, exponent);
-    
-    //insert at front if list is empty or if exponent is greater than the first term (greatest 1st)
-    if (head == nullptr || head->exponent < exponent)
-    {
-        newNode->next = head;
-        head = newNode;
-        if (tail == nullptr)
-        {
-            tail = newNode;
-        }
+//TEST INSERT FUNCTION:
+void Polynomial::insert(int coefficient, int exponent) {
+    //only appending non-zero terms
+    if (coefficient == 0) {
         return;
     }
-    
-    //inserting at the end when the list is not empty
-    if (tail != nullptr)
-    {
-        tail->next = newNode;
+
+    Node* newNode = new Node(coefficient, exponent);
+
+    //managing the special case of if the list is empty
+    if (head == nullptr) {
+        head = newNode;
         tail = newNode;
-    }
-    else
-    {
-        head = tail = newNode; //if tail is nullptr both head and tail must point to newNode
+        return;
     }
 
-    // //creating pointers to linked list
+    //append to the end of the list
+    tail->next = newNode;
+    tail = newNode;
+    
+
+    //another test insert function
+    // if (coefficient == 0) {
+    //     return; // No need to insert zero coefficient terms
+    // }
+
+    // // Create the new node
+    // Node* newNode = new Node(coefficient, exponent);
+
+    // // If the list is empty or the new node should be at the beginning
+    // if (head == nullptr || head->exponent < exponent) {
+    //     newNode->next = head;
+    //     head = newNode;
+    //     if (tail == nullptr) {
+    //         tail = newNode; // Update tail if the list was empty
+    //     }
+    //     return;
+    // }
+
+    // // Traverse the list to find the correct insertion point
     // Node* current = head;
-    // Node* previous = nullptr;
+    // Node* prev = nullptr;
 
-    // //traversing to search for insertion point (this makes the function O(n))
-    // while (current != nullptr && current->exponent > exponent)
-    // {
-    //     previous = current;
+    // while (current != nullptr && current->exponent > exponent) {
+    //     prev = current;
     //     current = current->next;
     // }
 
-    // if (current != nullptr && current->exponent == exponent)
-    // {
+    // // If we find a term with the same exponent, combine the coefficients
+    // if (current != nullptr && current->exponent == exponent) {
     //     current->coefficient += coefficient;
-    //     delete newNode;
-    //     if (current->coefficient == 0)
-    //     {
-    //         //removing node if coefficient changes to 0
-    //         if (previous != nullptr)
-    //         {
-    //             previous->next = current->next; //if there is a previous node
+    //     if (current->coefficient == 0) {
+    //         // Remove the term if its coefficient becomes zero
+    //         if (prev != nullptr) {
+    //             prev->next = current->next;
+    //         } else {
+    //             head = current->next;
     //         }
-    //         else
-    //         {
-    //             head = current->next; //if the node is first
+    //         if (current == tail) {
+    //             tail = prev; // Update tail if the last node was removed
     //         }
     //         delete current;
     //     }
-    // }
-    // else //handles the case where the new term needs to be inserted into the list w/o replacing an existing term
-    // {
-    //     newNode->next = current;
-    //     if (previous != nullptr)
-    //     {
-    //         previous->next = newNode;
+    //     delete newNode; // No need to keep the new node
+    // } else {
+    //     // Insert the new node in the correct position
+    //     if (prev != nullptr) {
+    //         prev->next = newNode;
     //     }
-    //     else //if previous is nullptr
-    //     {
-    //         head = newNode;
+    //     newNode->next = current;
+    //     if (current == nullptr) {
+    //         tail = newNode; // Update tail if new node is the last node
     //     }
     // }
 }
+
+
+// //inserting a term helper function
+// void Polynomial::insert(int coefficient, int exponent) 
+// {   
+//     //initializing a new node
+//     Node* newNode = new Node(coefficient, exponent);
+    
+//     //insert at front if list is empty or if exponent is greater than the first term (greatest 1st)
+//     if (head == nullptr || head->exponent < exponent)
+//     {
+//         newNode->next = head;
+//         head = newNode;
+//         if (tail == nullptr)
+//         {
+//             tail = newNode;
+//         }
+//         return;
+//     }
+    
+//     //inserting at the end when the list is not empty
+//     if (tail != nullptr)
+//     {
+//         tail->next = newNode;
+//         tail = newNode;
+//     }
+//     else
+//     {
+//         head = tail = newNode; //if tail is nullptr both head and tail must point to newNode
+//     }
+
+//     // //creating pointers to linked list
+//     // Node* current = head;
+//     // Node* previous = nullptr;
+
+//     // //traversing to search for insertion point (this makes the function O(n))
+//     // while (current != nullptr && current->exponent > exponent)
+//     // {
+//     //     previous = current;
+//     //     current = current->next;
+//     // }
+
+//     // if (current != nullptr && current->exponent == exponent)
+//     // {
+//     //     current->coefficient += coefficient;
+//     //     delete newNode;
+//     //     if (current->coefficient == 0)
+//     //     {
+//     //         //removing node if coefficient changes to 0
+//     //         if (previous != nullptr)
+//     //         {
+//     //             previous->next = current->next; //if there is a previous node
+//     //         }
+//     //         else
+//     //         {
+//     //             head = current->next; //if the node is first
+//     //         }
+//     //         delete current;
+//     //     }
+//     // }
+//     // else //handles the case where the new term needs to be inserted into the list w/o replacing an existing term
+//     // {
+//     //     newNode->next = current;
+//     //     if (previous != nullptr)
+//     //     {
+//     //         previous->next = newNode;
+//     //     }
+//     //     else //if previous is nullptr
+//     //     {
+//     //         head = newNode;
+//     //     }
+//     // }
+// }
 
 
 
@@ -256,29 +331,95 @@ void Polynomial::insert(int coefficient, int exponent)
 
 
 
+// void Polynomial::cleanup() {
+//     if (head == nullptr) {
+//         tail = nullptr;
+//         return;
+//     }
+
+//     Node* current = head;
+//     Node* prev = nullptr;
+
+//     //traversing list in order to combine like terms
+//     while (current != nullptr) {
+//         prev = current;
+//         Node* inner = current->next;
+
+//         while (inner != nullptr) {
+//             if (inner->exponent == current->exponent) {
+//                 //combining like terms
+//                 current->coefficient += inner->coefficient;
+
+//                 //removing the redundant node
+//                 prev->next = inner->next;
+//                 delete inner;
+//                 inner = prev->next;
+//             } else {
+//                 prev = inner;
+//                 inner = inner->next;
+//             }
+//         }
+
+//         current = current->next;
+//     }
+
+//     //removing nodes with zero coefficient
+//     current = head;
+//     Node* prevNode = nullptr;
+//     while (current != nullptr) {
+//         if (current->coefficient == 0) {
+//             if (current == head) {
+//                 head = current->next;
+//                 delete current;
+//                 current = head;
+//             } else {
+//                 prevNode->next = current->next;
+//                 delete current;
+//                 current = prevNode->next;
+//             }
+//         } else {
+//             prevNode = current;
+//             current = current->next;
+//         }
+//     }
+
+//     //updating the tail pointer
+//     if (head == nullptr) {
+//         tail = nullptr;
+//     } else {
+//         Node* temp = head;
+//         while (temp->next != nullptr) {
+//             temp = temp->next;
+//         }
+//         tail = temp;
+//     }
+// }
+
+
 void Polynomial::cleanup() {
     if (head == nullptr) {
         tail = nullptr;
         return;
     }
 
+    // Step 1: Combine like terms
     Node* current = head;
-    Node* prev = nullptr;
-
-    //traversing list in order to combine like terms
     while (current != nullptr) {
-        prev = current;
         Node* inner = current->next;
-
+        Node* prev = current;
+        
         while (inner != nullptr) {
             if (inner->exponent == current->exponent) {
-                //combining like terms
                 current->coefficient += inner->coefficient;
-
-                //removing the redundant node
-                prev->next = inner->next;
-                delete inner;
-                inner = prev->next;
+                if (current->coefficient == 0) {
+                    // Removing the term if coefficient becomes zero
+                    prev->next = inner->next;
+                    delete inner;
+                    inner = prev->next;
+                } else {
+                    prev = inner;
+                    inner = inner->next;
+                }
             } else {
                 prev = inner;
                 inner = inner->next;
@@ -288,7 +429,7 @@ void Polynomial::cleanup() {
         current = current->next;
     }
 
-    //removing nodes with zero coefficient
+    // Step 2: Remove terms with zero coefficients
     current = head;
     Node* prevNode = nullptr;
     while (current != nullptr) {
@@ -308,7 +449,7 @@ void Polynomial::cleanup() {
         }
     }
 
-    //updating the tail pointer
+    // Update the tail pointer
     if (head == nullptr) {
         tail = nullptr;
     } else {
