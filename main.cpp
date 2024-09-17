@@ -74,20 +74,37 @@ int main() {
             // }
         } else if (command == "ADD") {
             string input;
-            cout << "Enter polynomial to add:" << endl;
+            cout << "Enter both polynomials as a single string: " << endl;
             getline(cin, input);
             Polynomial temp(input);
-            if (polynomial1)
-            {
-                *polynomial1 += temp;
+            Polynomial* polynomial1 = nullptr;
+            Polynomial* polynomial2 = nullptr;
+            if (readPolynomials(input, polynomial1, polynomial2)) {
+                cout << "You are asking to add ";
+                polynomial1->print();
+                cout << " and ";
+                polynomial2->print();
+                *polynomial1 = *polynomial1 + *polynomial2; // Use the overloaded operator+
                 cout << "The result of polynomial addition is: ";
                 polynomial1->print();
                 cout << endl;
+            } else {
+                cout << "Invalid input format." << endl;
             }
-            else
-            {
-                cout << "There is no polynomial to add to.";
-            }
+            
+            delete polynomial1; // Clean up memory
+            delete polynomial2;
+            // if (polynomial1)
+            // {
+            //     *polynomial1 += temp;
+            //     cout << "The result of polynomial addition is: ";
+            //     polynomial1->print();
+            //     cout << endl;
+            // }
+            // else
+            // {
+            //     cout << "There is no polynomial to add to.";
+            // }
         } else if (command == "SUB") {
             string input;
             cout << "Enter polynomial to subtract:" << endl;

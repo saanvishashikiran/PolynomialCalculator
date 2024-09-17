@@ -211,21 +211,74 @@ void Polynomial::cleanup() {
 }
 
 
+
+bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*& polynomial2) {
+    istringstream iss(input);
+    
+    int termsInPolynomial1 = 0, termsInPolynomial2 = 0;
+    
+    //reading the number of terms in the first polynomial
+    if (!(iss >> termsInPolynomial1)) {
+        cout << "Error: Invalid input for terms in first polynomial." << endl;
+        return false;
+    }
+    
+    cout << termsInPolynomial1 << " terms in polynomial1\n" << endl;
+
+    //reading coefficients and exponents for the first polynomial
+    string polynomial1String = to_string(termsInPolynomial1) + " ";
+    for (int i = 0; i < termsInPolynomial1; ++i) {
+        int coefficient, exponent;
+        if (!(iss >> coefficient >> exponent)) {
+            cout << "Error: Invalid input for polynomial 1." << endl;
+            return false;
+        }
+        polynomial1String += to_string(coefficient) + " " + to_string(exponent) + " ";
+    }
+
+    //debugging output for first polynomial
+    cout << "Parsed polynomial 1: " << polynomial1String << endl;
+
+    //initializing poly1 with the parsed string
+    delete polynomial1;
+    polynomial1 = new Polynomial(polynomial1String);
+
+    //reading the number of terms in the second polynomial
+    if (!(iss >> termsInPolynomial2)) {
+        cout << "Error: Invalid input for terms in second polynomial." << endl;
+        return false;
+    }
+
+    cout << termsInPolynomial2 << " terms in polynomial2\n" << endl;
+
+    //reading coefficients and exponents for the second polynomial
+    string polynomial2String = to_string(termsInPolynomial2) + " ";
+    for (int i = 0; i < termsInPolynomial2; ++i) {
+        int coefficient, exponent;
+        if (!(iss >> coefficient >> exponent)) {
+            cout << "Error: Invalid input for polynomial 2." << endl;
+            return false;
+        }
+        polynomial2String += to_string(coefficient) + " " + to_string(exponent) + " ";
+    }
+
+    //debugging output for second polynomial
+    cout << "Parsed polynomial 2: " << polynomial2String << endl;
+
+    //initializing poly2 with the parsed string
+    delete polynomial2;
+    polynomial2 = new Polynomial(polynomial2String);
+
+    return true;
+}
+
+
+
 //implementing public methods
 
 //overloaded addition operator
 Polynomial& Polynomial::operator+(const Polynomial& other) 
 {
-    // Node* current = other.head;
-
-    // while (current != nullptr)
-    // {
-    //     insert(current->coefficient, current->exponent);
-    //     current = current->next;
-    // }
-    
-    // return *this;
-
     Node* current1 = head;
     Node* current2 = other.head;
     Node* prev = nullptr;
@@ -301,16 +354,6 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
     }
 
     return *this;
-
-    // if (current1 == nullptr)
-    // {
-    //     current1->next = current2;
-    // }
-
-    // //when we get to insertion point, we can call
-
-    // return *this;
-
 }
 
 
