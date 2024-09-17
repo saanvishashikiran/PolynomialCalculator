@@ -1682,10 +1682,10 @@ Polynomial& Polynomial::operator%=(const Polynomial& other)
             multiple.insert(coeff * otherNode->coefficient, expDiff + otherNode->exponent);
             otherNode = otherNode->next;
         }
-
+        
         remainder -= multiple;
+        remainder.cleanup();
     }
-    remainder.cleanup();
     *this = remainder;
     return *this;
    
