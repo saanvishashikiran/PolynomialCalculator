@@ -43,10 +43,10 @@ int main() {
             string input;
             getline(cin, input);
             polynomial1 = new Polynomial(input);
-            cout << "This is your input!" << endl;
+            cout << "Printed polynomial input: " << endl;
             if (polynomial1) 
             {
-                polynomial1->printInput(input);
+                polynomial1->print();
             }
             else 
             {

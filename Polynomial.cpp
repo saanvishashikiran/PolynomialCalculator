@@ -471,27 +471,6 @@ void Polynomial::print() const
 
 
 
-void Polynomial::printInput(const std::string& input)
-{
-    istringstream iss(input);
-    int numberOfTerms;
-    iss >> numberOfTerms; //reading the number of terms
-
-    Polynomial tempPoly; // Temporary polynomial to construct from input
-
-    for (int i = 0; i < numberOfTerms; ++i) 
-    {
-        int coefficient, exponent;
-        iss >> coefficient >> exponent; // Read coefficient and exponent
-        tempPoly.insert(coefficient, exponent); // Use the insert function to add terms to the polynomial
-    }
-
-    // Now print the constructed polynomial
-    tempPoly.cleanup();
-    tempPoly.print(); // Call the existing print method
-}
-
-
 //evaluate function
 int Polynomial::evaluate(int x) const 
 {
