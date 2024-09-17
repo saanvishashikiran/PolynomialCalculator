@@ -59,19 +59,11 @@ int main() {
             std::string polynomialPart = input.substr(0, input.find_last_of(' '));
             int x = std::stoi(input.substr(input.find_last_of(' ') + 1)); // Extract x from input
 
-            Polynomial polynomial(polynomialPart); // Initialize polynomial
-            int result = polynomial.evaluate(polynomialPart); // Evaluate using the polynomial part
+            Polynomial polynomial(polynomialPart); //initializing polynomial
+            int result = polynomial.evaluate(x); //evaluating using the polynomial part
+            cout << "Polynomial input: ";
+            polynomial.print();
             cout << "Your polynomial evaluated at " << x << " is " << result << endl;
-            // Polynomial polynomial(input);
-            // if(polynomial)
-            // {
-            //     int result = polynomial1->evaluate(input);
-            //     cout << "Your polynomial evaluated at " << input.substr(input.find_last_of(' ') + 1) << " is " << result << endl;
-            // } 
-            // else
-            // {
-            //     cout << "No polynomial to evaluate." << endl;
-            // }
         } else if (command == "ADD") {
             string input;
             cout << "Enter both polynomials you would like to add as a single string: " << endl;
@@ -142,21 +134,99 @@ int main() {
             delete polynomial2;
 
         } else if (command == "EXP") {
+            cout << "Enter the polynomial and the power you want to exponentiate to as a single string: " << endl;
+            string input;
+            getline(cin, input);
+
+            // Find the position of the last space in the input
+            size_t spacePos = input.find_last_of(' ');
+            if (spacePos == string::npos) {
+                cout << "Error: Invalid input format. Ensure you include both polynomial and exponent." << endl;
+                continue;
+            }
+
+            // Extract polynomial part and exponent
+            string polynomialPart = input.substr(0, spacePos);
             int exponent;
-            cout << "Enter the power you want to exponentiate to:" << endl;
-            cin >> exponent;
-            cin.ignore();
-            if (polynomial1)
-            {
-                polynomial1->exponentiate(exponent);
-                cout << "The result of polynomial exponentiation is:";
-                polynomial1->print();
-                cout << endl;
+            try {
+                exponent = std::stoi(input.substr(spacePos + 1));
+            } catch (const std::invalid_argument&) {
+                cout << "Error: Invalid exponent format. It must be an integer." << endl;
+                continue;
             }
-            else
-            {
-                cout << "There is no power to exponentiate to.";
-            }
+
+            // Initialize the polynomial
+            delete polynomial1;
+            polynomial1 = new Polynomial(polynomialPart);
+
+            // Perform exponentiation
+            polynomial1->exponentiate(exponent);
+
+            // Print the result
+            cout << "Polynomial input: ";
+            polynomial1->print(); // Print the polynomial after exponentiation
+            cout << "Your polynomial raised to the power of " << exponent << " is: ";
+            polynomial1->print(); // Print the final polynomial after exponentiation
+            cout << endl;
+            // cout << "Enter the polynomial and the power you want to exponentiate to as a single string: " << endl;
+            // string input;
+            // getline(cin, input);
+            // std::string polynomialPart = input.substr(0, input.find_last_of(' '));
+            // int n = std::stoi(input.substr(input.find_last_of(' ') + 1)); // Extract x from input
+
+            // Polynomial polynomial(polynomialPart); //initializing polynomial
+            // int result = polynomial.exponentiate(n); //exponentiating using the polynomial part
+            // cout << "Polynomial input: ";
+            // polynomial.print();
+            // cout << "Your polynomial raised to the power of " << n << " is " << result << endl;
+            
+            // // string input;
+            // // cout << "Enter the polynomial and the power you want to exponentiate to as a single string: " << endl;
+            // // getline(cin, input);
+            // // istringstream iss(input);
+            // // int termsInPolynomial1 = 0;
+
+            // // if (!iss >> termsInPolynomial1)
+            // // {
+            // //     cout << "ERROR: Invalid input for terms in first polynomial." << endl;
+            // // }
+
+            // //     cout << termsInPolynomial1 << " terms in polynomial1\n" << endl;
+
+            // // //reading coefficients and exponents for the first polynomial
+            // // string polynomial1String = to_string(termsInPolynomial1) + " ";
+            // // for (int i = 0; i < termsInPolynomial1; ++i) {
+            // //     int coefficient, exponent;
+            // //     if (!(iss >> coefficient >> exponent)) {
+            // //         cout << "Error: Invalid input for polynomial 1." << endl;
+            // //     }
+            // //     polynomial1String += to_string(coefficient) + " " + to_string(exponent) + " ";
+            // // }
+
+            // // //debugging output for first polynomial
+            // // cout << "Parsed polynomial 1: " << polynomial1String << endl;
+
+            // // //initializing poly1 with the parsed string
+            // // delete polynomial1;
+            // // polynomial1 = new Polynomial(polynomial1String);
+
+            // // int exponent;
+
+            // // if (!(iss >> exponent)) {
+            // //     cout << "Error: Invalid input for exponent." << endl;
+            // // }
+
+            // // if (polynomial1)
+            // // {
+            // //     polynomial1->exponentiate(exponent);
+            // //     cout << "The result of polynomial exponentiation is:";
+            // //     polynomial1->print();
+            // //     cout << endl;
+            // // }
+            // // else
+            // // {
+            // //     cout << "There is no power to exponentiate to.";
+            // // }
 
         } else if (command == "MOD") {
             string input;

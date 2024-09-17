@@ -65,7 +65,7 @@ public:
     //methods
     void print() const;
     void printInput(const std::string& input);
-    int evaluate(const std::string& input) const;
+    int evaluate(int x) const;
     Polynomial* exponentiate(int n);
     // Polynomial* modulus(Polynomial& other);
     void addNode(int coeff, int exp);
