@@ -277,7 +277,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
 //implementing public methods
 
 //overloaded addition operator
-Polynomial& Polynomial::operator+(const Polynomial& other) 
+Polynomial& Polynomial::operator+=(const Polynomial& other) 
 {
     Node* current1 = head;
     Node* current2 = other.head;

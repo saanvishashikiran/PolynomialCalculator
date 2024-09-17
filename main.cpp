@@ -84,7 +84,7 @@ int main() {
                 polynomial1->print();
                 cout << " and ";
                 polynomial2->print();
-                *polynomial1 = *polynomial1 + *polynomial2; // Use the overloaded operator+
+                *polynomial1 += *polynomial2; //using the overloaded operator+=
                 cout << "The result of polynomial addition is: ";
                 polynomial1->print();
                 cout << endl;
@@ -92,19 +92,8 @@ int main() {
                 cout << "Invalid input format." << endl;
             }
             
-            delete polynomial1; // Clean up memory
+            delete polynomial1; //cleaning up memory
             delete polynomial2;
-            // if (polynomial1)
-            // {
-            //     *polynomial1 += temp;
-            //     cout << "The result of polynomial addition is: ";
-            //     polynomial1->print();
-            //     cout << endl;
-            // }
-            // else
-            // {
-            //     cout << "There is no polynomial to add to.";
-            // }
         } else if (command == "SUB") {
             string input;
             cout << "Enter both polynomials you would like to subtract as a single string: " << endl;
@@ -118,7 +107,7 @@ int main() {
                 polynomial2->print();
                 cout << " from ";
                 polynomial1->print();
-                *polynomial1 -= *polynomial2; // Use the overloaded operator+
+                *polynomial1 -= *polynomial2; //using the overloaded operator-=
                 cout << "The result of polynomial subtraction is: ";
                 polynomial1->print();
                 cout << endl;
@@ -126,35 +115,32 @@ int main() {
                 cout << "Invalid input format." << endl;
             }
             
-            delete polynomial1; // Clean up memory
+            delete polynomial1; //cleaning up memory
             delete polynomial2;
-            // if (polynomial1)
-            // {
-            //     *polynomial1 -= temp;
-            //     cout << "The result of polynomial subtraction is: ";
-            //     polynomial1->print();
-            //     cout << endl;
-            // }
-            // else
-            // {
-            //     cout << "There is no polynomial to subtract from.";
-            // }
         } else if (command == "MULT") {
             string input;
-            cout << "Enter the integer/polynomial you want to multiply: " << endl;
+            cout << "Enter both polynomials you would like to multiply as a single string: " << endl;
             getline(cin, input);
             Polynomial temp(input);
-            if (polynomial1)
-            {
-                *polynomial1 *= temp;
-                cout << "The result of integer/polynomial multiplication is: ";
+            Polynomial* polynomial1 = nullptr;
+            Polynomial* polynomial2 = nullptr;
+
+            if (readPolynomials(input, polynomial1, polynomial2)) {
+                cout << "You are asking to multiply ";
+                polynomial1->print();
+                cout << " and ";
+                polynomial2->print();
+                *polynomial1 *= *polynomial2; //using the overloaded operator*=
+                cout << "The result of polynomial multiplication is: ";
                 polynomial1->print();
                 cout << endl;
+            } else {
+                cout << "Invalid input format." << endl;
             }
-            else
-            {
-                cout << "There is no polynomial to multiply with.";
-            }
+            
+            delete polynomial1; //cleaning up memory
+            delete polynomial2;
+
         } else if (command == "EXP") {
             int exponent;
             cout << "Enter the power you want to exponentiate to:" << endl;

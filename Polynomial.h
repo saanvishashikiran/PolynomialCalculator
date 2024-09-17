@@ -56,7 +56,7 @@ public:
     ~Polynomial(); //destructor
 
     //overloaded operators
-    Polynomial& operator+(const Polynomial& other);
+    Polynomial& operator+=(const Polynomial& other);
     Polynomial& operator-=(const Polynomial& other);
     Polynomial& operator*=(const Polynomial& other);
     Polynomial& operator=(const Polynomial& other);
