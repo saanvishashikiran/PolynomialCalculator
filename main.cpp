@@ -159,25 +159,28 @@ int main() {
             }
 
         } else if (command == "MOD") {
-                if (polynomial1) {
-                cout << "Enter polynomial for modulus operation:" << endl;
-                string input;
-                getline(cin, input);
-                Polynomial other(input);
-                cout << "Your input was ";
-                other.print();
+            string input;
+            cout << "Enter both polynomials you would like to conduct modulus with as a single string: " << endl;
+            getline(cin, input);
+            Polynomial temp(input);
+            Polynomial* polynomial1 = nullptr;
+            Polynomial* polynomial2 = nullptr;
+
+            if (readPolynomials(input, polynomial1, polynomial2)) {
+                cout << "You are asking to calculate ";
+                polynomial1->print();
+                cout << " mod ";
+                polynomial2->print();
+                *polynomial1 %= *polynomial2; //using the overloaded operator*=
+                cout << "The result of polynomial modulus calculation is: ";
+                polynomial1->print();
                 cout << endl;
-                // if (other.head == nullptr || other.head->coefficient != 1) {
-                //     cout << "The leading coefficient of the divisor polynomial must be 1." << endl;
-                // } else {
-                    polynomial1->modulus(other);
-                    cout << "The result of polynomial modulus is: ";
-                    polynomial1->print();
-                    cout << endl;
-                // }
             } else {
-                cout << "There is no polynomial to perform modulus with." << endl;
+                cout << "Invalid input format." << endl;
             }
+            
+            delete polynomial1; //cleaning up memory
+            delete polynomial2;
         } else if (command == "QUIT") {
             break;
         } else{

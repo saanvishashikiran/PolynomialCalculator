@@ -59,6 +59,7 @@ public:
     Polynomial& operator+=(const Polynomial& other);
     Polynomial& operator-=(const Polynomial& other);
     Polynomial& operator*=(const Polynomial& other);
+    Polynomial& operator%=(const Polynomial& other);
     Polynomial& operator=(const Polynomial& other);
 
     //methods
@@ -66,7 +67,7 @@ public:
     void printInput(const std::string& input);
     int evaluate(const std::string& input) const;
     Polynomial* exponentiate(int n);
-    Polynomial* modulus(Polynomial& other);
+    // Polynomial* modulus(Polynomial& other);
     void addNode(int coeff, int exp);
 };
 

@@ -1655,12 +1655,13 @@ Polynomial* Polynomial::exponentiate(int n)
 
 
 //modulus function
-Polynomial* Polynomial::modulus(Polynomial& other)  
+// Polynomial* Polynomial::modulus(Polynomial& other)  
+Polynomial& Polynomial::operator%=(const Polynomial& other)
 {
     if (other.head == nullptr || other.head->coefficient != 1)
     {
         cout << "The leading coefficient of the divisor polynomial must be 1." << endl;
-        return this;
+        return *this;
     }
 
     // int otherDegree = other.head->exponent;
@@ -1686,7 +1687,7 @@ Polynomial* Polynomial::modulus(Polynomial& other)
         remainder.cleanup();
     }
     *this = remainder;
-    return this;
+    return *this;
    
     // //change this so that mod returns the original polynomial with modifications
     // Polynomial* result = new Polynomial();
