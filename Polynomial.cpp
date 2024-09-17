@@ -1679,13 +1679,13 @@ Polynomial& Polynomial::operator%=(const Polynomial& other)
 
         while (otherNode != nullptr)
         {
-            multiple.insert(coeff * otherNode->coefficient, expDiff + otherNode->exponent); // go back and take this out when logic is working, write a simple addNode O(1) function that makes a new node w coeff and exp
+            multiple.insert(coeff * otherNode->coefficient, expDiff + otherNode->exponent);
             otherNode = otherNode->next;
         }
 
         remainder -= multiple;
-        remainder.cleanup();
     }
+    remainder.cleanup();
     *this = remainder;
     return *this;
    
