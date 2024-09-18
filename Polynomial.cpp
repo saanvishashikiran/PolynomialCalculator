@@ -30,7 +30,7 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
                 current->next = newNode;
                 current = newNode;
             }
-        }
+        } 
     }
 }
 
@@ -85,10 +85,23 @@ void Polynomial::clear()
 //inserting a term helper function
 void Polynomial::insert(int coefficient, int exponent) 
 {
+    // Node* newNode = new Node(coefficient, exponent);
+    // newNode->next = head;
+    // head = newNode;  
+
     Node* newNode = new Node(coefficient, exponent);
-    newNode->next = head;
-    head = newNode;  
+    if (!head) {
+        head = newNode;
+    } else {
+        Node* current = head;
+        while (current->next) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
 }
+
+
 
 
 //helper function for cleaning up polynomials
@@ -165,7 +178,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
         return false;
     }
     
-    cout << termsInPolynomial1 << " terms in polynomial1\n" << endl;
+    cout << "\n" << termsInPolynomial1 << " terms in polynomial1" << endl;
 
     //reading coefficients and exponents for the first polynomial
     string polynomial1String = to_string(termsInPolynomial1) + " ";
@@ -191,7 +204,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
         return false;
     }
 
-    cout << termsInPolynomial2 << " terms in polynomial2\n" << endl;
+    cout << "\n" << termsInPolynomial2 << " terms in polynomial2" << endl;
 
     //reading coefficients and exponents for the second polynomial
     string polynomial2String = to_string(termsInPolynomial2) + " ";
@@ -205,7 +218,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
     }
 
     //debugging output for second polynomial
-    cout << "Parsed polynomial 2: " << polynomial2String << endl;
+    cout << "Parsed polynomial 2: " << polynomial2String << "\n" << endl;
 
     //initializing poly2 with the parsed string
     delete polynomial2;
@@ -543,11 +556,11 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
         cout << "The leading coefficient of the divisor polynomial must be 1." << endl;
         return *this;
     }
-    int i = 10;
 
     // int otherDegree = other.head->exponent;
     //Polynomial divisor(other);
     Polynomial remainder(*this);
+    Polynomial original(*this);
     
     while (remainder.head != nullptr && (remainder.head->exponent >= other.head->exponent))
     {
@@ -559,36 +572,19 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
         Node* otherNode = other.head; 
 
         //cout << "TESTING reached this point in while loop" << endl;
-        int j = 0;
         while (otherNode != nullptr)
         {
             multiple.insert(coeff * otherNode->coefficient, expDiff + otherNode->exponent);
             otherNode = otherNode->next;
-            cout << j << endl;
-            multiple.print();
-            cout << endl;
-            j++;
             //cout << "TESTING reached this point in while loop" << endl;
         }
         
         remainder = (remainder - multiple);
-
-        remainder.print();
-        cout << endl;
-        i--;
-        if(i == 0)
-        {
-            remainder.clear();
-            remainder.head = NULL;
-        }
-        //remainder.cleanup();
-        // Perform subtraction and check for issues
     }
 
-    // remainder.cleanup();
-    // return remainder;
-    
-    
+    Polynomial returnPoly;
     *this = remainder;
-    return *this;
+    returnPoly = *this;
+    *this = original;
+    return returnPoly;
 }
