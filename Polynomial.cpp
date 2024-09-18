@@ -132,7 +132,7 @@ void Polynomial::cleanup() {
     while (current) {
         if (current->next && current->exponent == current->next->exponent) {
             //combining coefficients
-            current->coefficient += current->next->coefficient;
+            current->coefficient = current->coefficient + current->next->coefficient;
             Node* temp = current->next;
             current->next = temp->next;
             delete temp;
@@ -219,7 +219,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
 //implementing public methods
 
 //overloaded addition operator
-Polynomial& Polynomial::operator+=(const Polynomial& other) 
+Polynomial& Polynomial::operator+(const Polynomial& other) 
 {
     Node* current1 = head;
     Node* current2 = other.head;
@@ -249,7 +249,7 @@ Polynomial& Polynomial::operator+=(const Polynomial& other)
         }
         else 
         {
-            current1->coefficient += current2->coefficient;
+            current1->coefficient = current1->coefficient + current2->coefficient;
             if (current1->coefficient == 0)
             {
                 //skipping over this since the coefficient is now 0
@@ -301,7 +301,7 @@ Polynomial& Polynomial::operator+=(const Polynomial& other)
 
 
 //overloaded subtraction operator
-Polynomial& Polynomial::operator-=(const Polynomial& other) 
+Polynomial& Polynomial::operator-(const Polynomial& other) 
 {
     Node* current1 = head;
     Node* current2 = other.head;
@@ -331,7 +331,7 @@ Polynomial& Polynomial::operator-=(const Polynomial& other)
         }
         else 
         {
-            current1->coefficient -= current2->coefficient;
+            current1->coefficient = current1->coefficient - current2->coefficient;
             if (current1->coefficient == 0)
             {
                 //skipping over this since the coefficient is now 0
@@ -383,7 +383,7 @@ Polynomial& Polynomial::operator-=(const Polynomial& other)
 
 
 //overloaded multiplication operator 
-Polynomial& Polynomial::operator*=(const Polynomial& other) 
+Polynomial& Polynomial::operator*(const Polynomial& other) 
 {
     Polynomial polynomial1(*this); //copying original polynomial
 
@@ -480,7 +480,7 @@ int Polynomial::evaluate(int x) const
     while (current)
     {
         int evaluatedTerm = current->coefficient * pow(x, current->exponent);
-        evaluatedPoly += evaluatedTerm;
+        evaluatedPoly = evaluatedPoly + evaluatedTerm;
         current = current->next;
     }
 
@@ -513,9 +513,9 @@ Polynomial* Polynomial::exponentiate(int n)
         Polynomial y = polynomial;
         y.exponentiate((n - 1)/2); //polynomial^((n-1)/2)
         result = y; 
-        result *= y; //setting result to y * y
+        result = result * y; //setting result to y * y
         result.cleanup();
-        result *= polynomial; //setting result to y * y * base because n is an odd number
+        result = result * polynomial; //setting result to y * y * base because n is an odd number
         result.cleanup();
     }
     else //if n is even
@@ -523,7 +523,7 @@ Polynomial* Polynomial::exponentiate(int n)
         Polynomial y = polynomial;
         y.exponentiate(n/2);
         result = y;
-        result *= y; //setting result to y * y
+        result = result * y; //setting result to y * y
         result.cleanup();
     }
     
@@ -536,42 +536,58 @@ Polynomial* Polynomial::exponentiate(int n)
 
 //modulus function
 // Polynomial* Polynomial::modulus(Polynomial& other)  
-Polynomial& Polynomial::operator%=(const Polynomial& other)
+Polynomial Polynomial::operator%=(const Polynomial& other)
 {
     if (other.head == nullptr || other.head->coefficient != 1)
     {
         cout << "The leading coefficient of the divisor polynomial must be 1." << endl;
         return *this;
     }
+    int i = 10;
 
     // int otherDegree = other.head->exponent;
-    Polynomial divisor(other);
+    //Polynomial divisor(other);
     Polynomial remainder(*this);
     
-    while (remainder.head != nullptr && remainder.head->exponent >= divisor.head->exponent)
+    while (remainder.head != nullptr && (remainder.head->exponent >= other.head->exponent))
     {
-        int expDiff = remainder.head->exponent - divisor.head->exponent;
+        int expDiff = remainder.head->exponent - other.head->exponent;
         int coeff = remainder.head->coefficient;
 
         Polynomial multiple;
         
-        Node* otherNode = divisor.head;
+        Node* otherNode = other.head; 
 
         //cout << "TESTING reached this point in while loop" << endl;
-
+        int j = 0;
         while (otherNode != nullptr)
         {
             multiple.insert(coeff * otherNode->coefficient, expDiff + otherNode->exponent);
             otherNode = otherNode->next;
+            cout << j << endl;
+            multiple.print();
+            cout << endl;
+            j++;
             //cout << "TESTING reached this point in while loop" << endl;
         }
         
-        remainder -= multiple;
-        // remainder.cleanup();
+        remainder = (remainder - multiple);
+
+        remainder.print();
+        cout << endl;
+        i--;
+        if(i == 0)
+        {
+            remainder.clear();
+            remainder.head = NULL;
+        }
+        //remainder.cleanup();
         // Perform subtraction and check for issues
     }
 
-    remainder.cleanup();
+    // remainder.cleanup();
+    // return remainder;
+    
     
     *this = remainder;
     return *this;

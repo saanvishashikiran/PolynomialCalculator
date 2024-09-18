@@ -5,6 +5,11 @@
 using namespace std;
 
 int main() {
+    // Polynomial p1("2 1 2 4 1 4 0"); // Example polynomial
+    // Polynomial p2("1 1 1 2 0"); // Divisor polynomial (must have leading coefficient of 1)
+
+    // p1 %= p2; // Perform modulus operation
+    // p1.print(); // Check the result
     string command = "";
     Polynomial* polynomial1 = nullptr;
     Polynomial* polynomial2 = nullptr;
@@ -76,7 +81,7 @@ int main() {
                 polynomial1->print();
                 cout << " and ";
                 polynomial2->print();
-                *polynomial1 += *polynomial2; //using the overloaded operator+=
+                *polynomial1 = *polynomial1 + *polynomial2; //using the overloaded operator+
                 cout << "The result of polynomial addition is: ";
                 polynomial1->print();
                 cout << endl;
@@ -99,7 +104,7 @@ int main() {
                 polynomial2->print();
                 cout << " from ";
                 polynomial1->print();
-                *polynomial1 -= *polynomial2; //using the overloaded operator-=
+                *polynomial1 = *polynomial1 - *polynomial2; //using the overloaded operator-
                 cout << "The result of polynomial subtraction is: ";
                 polynomial1->print();
                 cout << endl;
@@ -122,7 +127,7 @@ int main() {
                 polynomial1->print();
                 cout << " and ";
                 polynomial2->print();
-                *polynomial1 *= *polynomial2; //using the overloaded operator*=
+                *polynomial1 = *polynomial1 * *polynomial2; //using the overloaded operator*
                 cout << "The result of polynomial multiplication is: ";
                 polynomial1->print();
                 cout << endl;
@@ -241,7 +246,7 @@ int main() {
                 polynomial1->print();
                 cout << " mod ";
                 polynomial2->print();
-                *polynomial1 %= *polynomial2; //using the overloaded operator*=
+                *polynomial1 %= *polynomial2; //using the overloaded operator%=
                 cout << "The result of polynomial modulus calculation is: ";
                 polynomial1->print();
                 cout << endl;
