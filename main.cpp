@@ -79,8 +79,8 @@ int main() {
             cout << "Enter both polynomials you would like to add as a single string: " << endl;
             getline(cin, input);
             Polynomial temp(input);
-            // Polynomial* polynomial1 = nullptr;
-            // Polynomial* polynomial2 = nullptr;
+            Polynomial* polynomial1 = nullptr;
+            Polynomial* polynomial2 = nullptr;
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to add ";
                 polynomial1->print();
@@ -104,8 +104,8 @@ int main() {
             cout << "Enter both polynomials you would like to subtract as a single string: " << endl;
             getline(cin, input);
             Polynomial temp(input);
-            // Polynomial* polynomial1 = nullptr;
-            // Polynomial* polynomial2 = nullptr;
+            Polynomial* polynomial1 = nullptr;
+            Polynomial* polynomial2 = nullptr;
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to subtract ";
@@ -130,8 +130,8 @@ int main() {
             cout << "Enter both polynomials you would like to multiply as a single string: " << endl;
             getline(cin, input);
             Polynomial temp(input);
-            // Polynomial* polynomial1 = nullptr;
-            // Polynomial* polynomial2 = nullptr;
+            Polynomial* polynomial1 = nullptr;
+            Polynomial* polynomial2 = nullptr;
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to multiply ";
@@ -192,8 +192,8 @@ int main() {
             cout << "Enter both polynomials you would like to conduct modulus with as a single string: " << endl;
             getline(cin, input);
             Polynomial temp(input);
-            // Polynomial* polynomial1 = nullptr;
-            // Polynomial* polynomial2 = nullptr;
+            Polynomial* polynomial1 = nullptr;
+            Polynomial* polynomial2 = nullptr;
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to calculate ";

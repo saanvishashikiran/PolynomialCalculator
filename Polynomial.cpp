@@ -78,6 +78,7 @@ void Polynomial::clear()
     }
 
     head = nullptr;
+    tail = nullptr;
 }
 
 
@@ -85,19 +86,31 @@ void Polynomial::clear()
 //inserting a term helper function
 void Polynomial::insert(int coefficient, int exponent) 
 {
+    // // Node* newNode = new Node(coefficient, exponent);
+    // // newNode->next = head;
+    // // head = newNode;  
+
     // Node* newNode = new Node(coefficient, exponent);
-    // newNode->next = head;
-    // head = newNode;  
+    // if (!head) {
+    //     head = newNode;
+    // } else {
+    //     Node* current = head;
+    //     while (current->next) {
+    //         current = current->next;
+    //     }
+    //     current->next = newNode;
+    // }
 
     Node* newNode = new Node(coefficient, exponent);
+    
     if (!head) {
+        // If the list is empty, set both head and tail to the new node
         head = newNode;
+        tail = newNode;
     } else {
-        Node* current = head;
-        while (current->next) {
-            current = current->next;
-        }
-        current->next = newNode;
+        // If the list is not empty, link the new node to the current tail
+        tail->next = newNode;
+        tail = newNode; // Update the tail to the new node
     }
 }
 
