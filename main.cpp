@@ -25,27 +25,50 @@ int main() {
         }
         
         if (command == "ZERO") {
-            delete polynomial1;
+            if (polynomial1)
+            {
+                delete polynomial1;
+            }            
+            
             polynomial1 = new Polynomial();
             cout << "Polynomial initialized to ZERO." << endl;
+            polynomial1->print();
 
 
 
         } else if (command == "ARBITRARY") {
+            if (polynomial1)
+            {
+                delete polynomial1;
+            }
+            
             cout << "Enter an arbitrary polynomial: " << endl;
             string input;
-            getline(cin, input); // Read the rest of the line for polynomial input
-            if (polynomial1) delete polynomial1; // Clean up previous polynomial if needed
+            getline(cin, input); //reading the rest of the line for polynomial input
+            // if (polynomial1) delete polynomial1; // Clean up previous polynomial if needed
+
             polynomial1 = new Polynomial(input);   
             cout << "This is your input" << endl;
-            polynomial1->print();         
-
+            if (polynomial1) 
+            {
+                polynomial1->print();
+            }
+            else 
+            {
+                cout << "No arbitrary polynomial to print." << endl;
+            }
 
 
         } else if (command == "PRINT") {
+            if (polynomial1)
+            {
+                delete polynomial1;
+            }
+
             cout << "Enter the polynomial you would like to print: " << endl;
             string input;
             getline(cin, input);
+
             polynomial1 = new Polynomial(input);
             cout << "Printed polynomial input: " << endl;
             if (polynomial1) 
@@ -97,12 +120,21 @@ int main() {
             // polynomial2 = new Polynomial();
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to add ";
-                polynomial1->print();
+                if (polynomial1) 
+                {
+                    polynomial1->print();
+                }
                 cout << " and ";
-                polynomial2->print();
+                if (polynomial2) 
+                {
+                    polynomial2->print();
+                }               
                 *polynomial1 = *polynomial1 + *polynomial2; //using the overloaded operator+
                 cout << "The result of polynomial addition is: ";
-                polynomial1->print();
+                if (polynomial1) 
+                {
+                    polynomial1->print();
+                }
                 cout << endl;
             } else {
                 cout << "Invalid input format." << endl;
@@ -137,12 +169,21 @@ int main() {
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to subtract ";
-                polynomial2->print();
+                if (polynomial2) 
+                {
+                    polynomial2->print();
+                }           
                 cout << " from ";
-                polynomial1->print();
+                if (polynomial1) 
+                {
+                    polynomial1->print();
+                }           
                 *polynomial1 = *polynomial1 - *polynomial2; //using the overloaded operator-
                 cout << "The result of polynomial subtraction is: ";
-                polynomial1->print();
+                if (polynomial1) 
+                {
+                    polynomial1->print();
+                }           
                 cout << endl;
             } else {
                 cout << "Invalid input format." << endl;
@@ -176,12 +217,21 @@ int main() {
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to multiply ";
-                polynomial1->print();
+                if (polynomial1) 
+                {
+                    polynomial1->print();
+                }           
                 cout << " and ";
-                polynomial2->print();
+                if (polynomial2) 
+                {
+                    polynomial2->print();
+                }           
                 *polynomial1 = *polynomial1 * *polynomial2; //using the overloaded operator*
                 cout << "The result of polynomial multiplication is: ";
-                polynomial1->print();
+                if (polynomial1) 
+                {
+                    polynomial1->print();
+                }        
                 cout << endl;
             } else {
                 cout << "Invalid input format." << endl;
@@ -219,11 +269,14 @@ int main() {
             // polynomial1 = new Polynomial(polynomialPart);
 
             //clearing previous contents of polynomial1 if needed
-            if (polynomial1) {
+            if (polynomial1) 
+            {
                 polynomial1->reset();
-            } else {
-                polynomial1 = new Polynomial(); 
-            }
+            } 
+            
+            // else {
+            //     polynomial1 = new Polynomial(); 
+            // }
 
             //initializing the polynomial with the polynomialPart
             *polynomial1 = Polynomial(polynomialPart);
@@ -233,7 +286,14 @@ int main() {
 
             //printing the result
             cout << "Your polynomial raised to the power of " << exponent << " is: ";
-            polynomial1->print(); //printing the final polynomial after exponentiation
+            if (polynomial1) 
+            {
+                polynomial1->print();
+            }        
+            else 
+            {
+                cout << "Invalid input format." << endl;
+            }
             cout << endl;
 
 
@@ -261,14 +321,23 @@ int main() {
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to calculate ";
-                polynomial1->print();
+                if (polynomial1) 
+                {
+                    polynomial1->print();
+                }        
                 cout << " mod ";
-                polynomial2->print();
+                if (polynomial2) 
+                {
+                    polynomial2->print();
+                }        
                 Polynomial px;
                 Polynomial* returnPoly = &px;
                 *returnPoly = (*polynomial1 %= *polynomial2); //using the overloaded operator%=
                 cout << "The result of polynomial modulus calculation is: ";
-                returnPoly->print();
+                if (returnPoly)
+                {
+                    returnPoly->print();
+                }
                 cout << endl;
             } else {
                 cout << "Invalid input format." << endl;
