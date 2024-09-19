@@ -2,9 +2,16 @@
 using namespace std;
 
 
-//implementing constructors
+/****************************************************************************
+ *                                                                          *
+ *                 class Polynomial Constructors & Destructor               *
+ *                                                                          *
+ ****************************************************************************/
 
-//implementation for parametrized constructor
+/****************************************************************************
+ *                 Polynomial Parametrized Constructor                      *
+ ****************************************************************************/
+
 Polynomial::Polynomial(const std::string& input) : head(nullptr) {
     istringstream iss(input);
     int numberOfTerms;
@@ -35,7 +42,10 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
 
 
 
-//copy constructor
+/****************************************************************************
+ *                       Polynomial Copy Constructor                        *
+ ****************************************************************************/
+
 Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
     if (other.head == nullptr)
     {
@@ -56,7 +66,9 @@ Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
 
 
 
-//implementing destructor
+/****************************************************************************
+ *                         Polynomial Destructor                            *
+ ****************************************************************************/
 Polynomial::~Polynomial()
 {
     clear();
@@ -64,20 +76,18 @@ Polynomial::~Polynomial()
 
 
 
-//implementing helper functions
+/****************************************************************************
+ *                                                                          *
+ *                  class Polynomial Private Helper Functions               *
+ *                                                                          *
+ ****************************************************************************/
 
-//clear helper function
+/****************************************************************************
+ *                         Polynomial Clear Helper Function                 *
+ ****************************************************************************/
+
 void Polynomial::clear() 
 {
-    // while (head != nullptr)
-    // {
-    //     Node* temp = head;
-    //     head = head->next;
-    //     delete temp;
-    // }
-
-    // head = nullptr;
-    // tail = nullptr;
     Node* current = head;
     while (current) {
         Node* next = current->next;
@@ -90,48 +100,38 @@ void Polynomial::clear()
 
 
 
-//inserting a term helper function
+/****************************************************************************
+ *                        Polynomial Insert Helper Function                 *
+ ****************************************************************************/
 void Polynomial::insert(int coefficient, int exponent) 
 {
-    // // Node* newNode = new Node(coefficient, exponent);
-    // // newNode->next = head;
-    // // head = newNode;  
-
-    // Node* newNode = new Node(coefficient, exponent);
-    // if (!head) {
-    //     head = newNode;
-    // } else {
-    //     Node* current = head;
-    //     while (current->next) {
-    //         current = current->next;
-    //     }
-    //     current->next = newNode;
-    // }
-
     Node* newNode = new Node(coefficient, exponent);
     
     if (!head) {
-        // If the list is empty, set both head and tail to the new node
+        //setting both head and tail to the new node if the list is empty
         head = newNode;
         tail = newNode;
     } else {
-        // If the list is not empty, link the new node to the current tail
+        //linking the new node to the current tail if the list is not empty
         tail->next = newNode;
-        tail = newNode; // Update the tail to the new node
+        tail = newNode; //updating the tail to the new node
     }
 }
 
 
 
+/****************************************************************************
+ *                       Polynomial Cleanup Helper Function                 *
+ ****************************************************************************/
 
-//helper function for cleaning up polynomials
 void Polynomial::cleanup() {
     if (!head) return;
 
     Node* current = head;
     Node* prev = nullptr;
 
-    //bubble sort inspired pass to sort by exponent 
+    //using a bubble sort inspired technique in order to sort polynomial by exponent 
+    //compares two terms at a time and swapping them if the next node has a greater exponent degree
     bool sorted;
     do {
         sorted = true;
@@ -140,9 +140,9 @@ void Polynomial::cleanup() {
 
         while (current && current->next) {
             if (current->exponent < current->next->exponent) {
-                //swapping nodes
-                sorted = false;
-                Node* temp = current->next;
+                //swapping nodes if the next node has a higher exponent degree!
+                sorted = false; //using a bool to track sorting status
+                Node* temp = current->next; 
                 current->next = temp->next;
                 temp->next = current;
 
@@ -159,11 +159,12 @@ void Polynomial::cleanup() {
         }
     } while (!sorted);
 
-    //passing to combine like terms and eliminate zero terms
+    //passing through list again to combine like terms and eliminate zero terms
     current = head;
     prev = nullptr;
     while (current) {
-        if (current->next && current->exponent == current->next->exponent) {
+        //will run as long as there is a next node and the exponent of current and next are equal
+        if (current->next && (current->exponent == current->next->exponent)) {
             //combining coefficients
             current->coefficient = current->coefficient + current->next->coefficient;
             Node* temp = current->next;
@@ -177,8 +178,13 @@ void Polynomial::cleanup() {
                 head = current->next;
             }
             delete current;
-            current = prev ? prev->next : head;
+            if (prev != nullptr) {
+                current = prev->next;  //setting current to the next node if prev isn't null
+            } else {
+                current = head;        //setting current to head if prev is null
+            }
         } else {
+            //if there are no terms to combine or remove, keep reading through linked list!!
             prev = current;
             current = current->next;
         }
@@ -186,6 +192,10 @@ void Polynomial::cleanup() {
 }
 
 
+
+/****************************************************************************
+ *              Polynomial Reading Polynomials Helper Function              *
+ ****************************************************************************/
 
 bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*& polynomial2) {
     istringstream iss(input);
@@ -249,9 +259,16 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
 
 
 
-//implementing public methods
+/****************************************************************************
+ *                                                                          *
+ *                          class Polynomial Methods                        *
+ *                                                                          *
+ ****************************************************************************/
 
-//overloaded addition operator
+/****************************************************************************
+ *                  Polynomial Overloaded Addition Operator                 *
+ ****************************************************************************/
+
 Polynomial& Polynomial::operator+(const Polynomial& other) 
 {
     Node* current1 = head;
@@ -333,7 +350,10 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
 
 
 
-//overloaded subtraction operator
+/****************************************************************************
+ *                  Polynomial Overloaded Subtraction Operator              *
+ ****************************************************************************/
+
 Polynomial& Polynomial::operator-(const Polynomial& other) 
 {
     Node* current1 = head;
@@ -415,7 +435,10 @@ Polynomial& Polynomial::operator-(const Polynomial& other)
 
 
 
-//overloaded multiplication operator 
+/****************************************************************************
+ *               Polynomial Overloaded Multiplication Operator              *
+ ****************************************************************************/
+
 Polynomial& Polynomial::operator*(const Polynomial& other) 
 {
     Polynomial polynomial1(*this); //copying original polynomial
@@ -447,44 +470,14 @@ Polynomial& Polynomial::operator*(const Polynomial& other)
 
 
 
-//overloaded assignment operator
+/****************************************************************************
+ *                 Polynomial Overloaded Assignment Operator                *
+ ****************************************************************************/
+
 Polynomial& Polynomial::operator=(const Polynomial& other)
 {
-    // if (this != &other)
-    // {
-    //     clear();
-    //     Node* current = other.head;
-    //     while (current != nullptr)
-    //     {
-    //         insert(current->coefficient, current->exponent);
-    //         current = current->next;
-    //     }
-    // }
-
-    // return *this;
-        // Self-assignment guard
-    // if (this != &other)
-    // {
-    //     // Clear current polynomial to avoid memory leaks
-    //     clear();
-        
-    //     // Ensure head and tail are reset
-    //     head = nullptr;
-    //     tail = nullptr;
-        
-    //     // Deep copy of other polynomial
-    //     Node* current = other.head;
-    //     while (current != nullptr)
-    //     {
-    //         // Create new nodes for each term and insert them
-    //         insert(current->coefficient, current->exponent);
-    //         current = current->next;
-    //     }
-    // }
-    // return *this;
-
     if (this != &other) {
-        clear();  // Clean up existing list
+        clear();  //cleaning up existing list
         Node* temp = other.head;
         while (temp != nullptr) {
             insert(temp->coefficient, temp->exponent);
@@ -496,7 +489,10 @@ Polynomial& Polynomial::operator=(const Polynomial& other)
 
 
 
-//print function
+/****************************************************************************
+ *                          Polynomial Print Function                       *
+ ****************************************************************************/
+
 void Polynomial::print() const 
 {
     if (!head) {
@@ -534,7 +530,10 @@ void Polynomial::print() const
 
 
 
-//evaluate function
+/****************************************************************************
+ *                       Polynomial Evaluate Function                       *
+ ****************************************************************************/
+
 int Polynomial::evaluate(int x) const 
 {
     int evaluatedPoly = 0;
@@ -552,7 +551,10 @@ int Polynomial::evaluate(int x) const
 
 
 
-//exponentiation function
+/****************************************************************************
+ *                       Polynomial Exponentiate Function                   *
+ ****************************************************************************/
+
 Polynomial* Polynomial::exponentiate(int n)  
 {
     if (n < 0)
@@ -570,7 +572,7 @@ Polynomial* Polynomial::exponentiate(int n)
     Polynomial polynomial(*this);
     Polynomial result("1 1 0");
 
-    //binary exponentiation! follow textbook example exactly and use recursion
+    //binary exponentiation! 
     if (n % 2 == 1) //if n is odd
     {
         Polynomial y = polynomial;
@@ -597,8 +599,10 @@ Polynomial* Polynomial::exponentiate(int n)
 
 
 
-//modulus function
-// Polynomial* Polynomial::modulus(Polynomial& other)  
+/****************************************************************************
+ *              Polynomial Overloaded Modulus Assignment Operator           *
+ ****************************************************************************/
+
 Polynomial Polynomial::operator%=(const Polynomial& other)
 {
     if (other.head == nullptr || other.head->coefficient != 1)
@@ -607,8 +611,6 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
         return *this;
     }
 
-    // int otherDegree = other.head->exponent;
-    //Polynomial divisor(other);
     Polynomial remainder(*this);
     Polynomial original(*this);
     
@@ -621,24 +623,16 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
         
         Node* otherNode = other.head; 
 
-        //cout << "TESTING reached this point in while loop" << endl;
         while (otherNode != nullptr)
         {
             multiple.insert(coeff * otherNode->coefficient, expDiff + otherNode->exponent);
             otherNode = otherNode->next;
-            //cout << "TESTING reached this point in while loop" << endl;
         }
         
         remainder = (remainder - multiple);
     }
 
-    // Polynomial returnPoly;
-    // *this = remainder;
-    // returnPoly = *this;
-    // *this = original;
-    // return returnPoly;
     Polynomial returnPoly = std::move(remainder); // Use std::move to avoid copying
     *this = original;
     return returnPoly;
-
 }

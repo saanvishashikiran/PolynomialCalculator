@@ -44,10 +44,6 @@ private:
     void insert(int coefficient, int exponent);
     void cleanup();
     friend bool readPolynomials(const std::string& input, Polynomial*& polynomial1, Polynomial*& polynomial2);
-    //int evaluationCalc(int x) const;
-    //probably dont need these
-    // Polynomial* addOrSubtract(Polynomial* other, bool addition);
-    // Polynomial* multiply(Polynomial* other);
 
 public:
     //constructors

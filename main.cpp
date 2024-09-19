@@ -45,13 +45,13 @@ int main() {
             cout << "Enter an arbitrary polynomial: " << endl;
             string input;
             getline(cin, input); //reading the rest of the line for polynomial input
-            // if (polynomial1) delete polynomial1; // Clean up previous polynomial if needed
 
             polynomial1 = new Polynomial(input);   
             cout << "This is your input" << endl;
             if (polynomial1) 
             {
                 polynomial1->print();
+                cout << endl;
             }
             else 
             {
@@ -74,6 +74,7 @@ int main() {
             if (polynomial1) 
             {
                 polynomial1->print();
+                cout << endl;
             }
             else 
             {
@@ -93,7 +94,7 @@ int main() {
             int result = polynomial.evaluate(x); //evaluating using the polynomial part
             cout << "Polynomial input: ";
             polynomial.print();
-            cout << "Your polynomial evaluated at " << x << " is " << result << endl;
+            cout << "Your polynomial evaluated at " << x << " is " << result <<  "\n" << endl;
 
 
 
@@ -111,13 +112,6 @@ int main() {
             cout << "Enter both polynomials you would like to add as a single string: " << endl;
             getline(cin, input);
 
-            //Polynomial temp(input);
-            // Polynomial* polynomial1 = nullptr;
-            // Polynomial* polynomial2 = nullptr;
-            // delete polynomial1;  // Free the old memory
-            // delete polynomial2;  // Free the old memory
-            // polynomial1 = new Polynomial();
-            // polynomial2 = new Polynomial();
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to add ";
                 if (polynomial1) 
@@ -139,10 +133,7 @@ int main() {
             } else {
                 cout << "Invalid input format." << endl;
             }
-            
-            // delete polynomial1; //cleaning up memory
-            // delete polynomial2;
-
+        
 
 
         } else if (command == "SUB") {
@@ -158,14 +149,6 @@ int main() {
             string input;
             cout << "Enter both polynomials you would like to subtract as a single string: " << endl;
             getline(cin, input);
-
-            //Polynomial temp(input);
-            // Polynomial* polynomial1 = nullptr;
-            // // Polynomial* polynomial2 = nullptr;
-            // delete polynomial1;  // Free the old memory
-            // delete polynomial2;  // Free the old memory
-            // polynomial1 = new Polynomial();
-            // polynomial2 = new Polynomial();
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to subtract ";
@@ -188,9 +171,6 @@ int main() {
             } else {
                 cout << "Invalid input format." << endl;
             }
-            
-            // delete polynomial1; //cleaning up memory
-            // delete polynomial2;
 
 
 
@@ -206,14 +186,6 @@ int main() {
             string input;
             cout << "Enter both polynomials you would like to multiply as a single string: " << endl;
             getline(cin, input);
-
-            // Polynomial temp(input);
-            // // Polynomial* polynomial1 = nullptr;
-            // // Polynomial* polynomial2 = nullptr;
-            // delete polynomial1;  // Free the old memory
-            // delete polynomial2;  // Free the old memory
-            // polynomial1 = new Polynomial();
-            // polynomial2 = new Polynomial();
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to multiply ";
@@ -237,9 +209,6 @@ int main() {
                 cout << "Invalid input format." << endl;
             }
             
-            // delete polynomial1; //cleaning up memory
-            // //delete polynomial2;
-
 
 
         } else if (command == "EXP") {
@@ -264,19 +233,11 @@ int main() {
                 continue;
             }
 
-            // // initializing polynomial
-            // delete polynomial1;
-            // polynomial1 = new Polynomial(polynomialPart);
-
             //clearing previous contents of polynomial1 if needed
             if (polynomial1) 
             {
                 polynomial1->reset();
             } 
-            
-            // else {
-            //     polynomial1 = new Polynomial(); 
-            // }
 
             //initializing the polynomial with the polynomialPart
             *polynomial1 = Polynomial(polynomialPart);
@@ -311,14 +272,6 @@ int main() {
             cout << "Enter both polynomials you would like to conduct modulus with as a single string: " << endl;
             getline(cin, input);
 
-            // Polynomial temp(input);
-            // // Polynomial* polynomial1 = nullptr;
-            // // Polynomial* polynomial2 = nullptr;
-            // delete polynomial1;  // Free the old memory
-            // delete polynomial2;  // Free the old memory
-            // polynomial1 = new Polynomial();
-            // polynomial2 = new Polynomial();
-
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to calculate ";
                 if (polynomial1) 
@@ -343,20 +296,17 @@ int main() {
                 cout << "Invalid input format." << endl;
             }
             
-            // delete polynomial1; //cleaning up memory
-            // delete polynomial2;
-
-
+            
 
         } else if (command == "QUIT") {
             delete polynomial1;
             delete polynomial2;
             return 0;
-            //break;
+
+
 
         } else{
             cout << "Error: Unknown Command:" << command << endl;
-
         }
     }
 
