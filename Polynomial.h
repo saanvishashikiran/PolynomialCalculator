@@ -5,6 +5,9 @@
 #include <utility>
 #include <iostream>
 #include <sstream>
+#include <cmath>
+#include <math.h>
+
 
 /****************************************************************************
  *                                                                          *
@@ -66,8 +69,9 @@ public:
     void print() const;
     int evaluate(int x) const;
     Polynomial* exponentiate(int n);
-    // Polynomial* modulus(Polynomial& other);
-    void addNode(int coeff, int exp);
+    void reset() {
+        clear();
+    }
 };
 
 #endif

@@ -1,5 +1,4 @@
 #include "Polynomial.h"
-#include <iostream>
 using namespace std;
 
 
@@ -37,7 +36,7 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
 
 
 //copy constructor
-Polynomial::Polynomial(const Polynomial& other) : head(nullptr) {
+Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
     if (other.head == nullptr)
     {
         return;
@@ -70,15 +69,23 @@ Polynomial::~Polynomial()
 //clear helper function
 void Polynomial::clear() 
 {
-    while (head != nullptr)
-    {
-        Node* temp = head;
-        head = head->next;
-        delete temp;
-    }
+    // while (head != nullptr)
+    // {
+    //     Node* temp = head;
+    //     head = head->next;
+    //     delete temp;
+    // }
 
-    head = nullptr;
-    tail = nullptr;
+    // head = nullptr;
+    // tail = nullptr;
+    Node* current = head;
+    while (current) {
+        Node* next = current->next;
+        delete current;  //freeing memory
+        current = next;
+    }
+    head = nullptr;  //avoiding dangling pointers
+    tail = nullptr;  
 }
 
 
@@ -443,17 +450,47 @@ Polynomial& Polynomial::operator*(const Polynomial& other)
 //overloaded assignment operator
 Polynomial& Polynomial::operator=(const Polynomial& other)
 {
-    if (this != &other)
-    {
-        clear();
-        Node* current = other.head;
-        while (current != nullptr)
-        {
-            insert(current->coefficient, current->exponent);
-            current = current->next;
+    // if (this != &other)
+    // {
+    //     clear();
+    //     Node* current = other.head;
+    //     while (current != nullptr)
+    //     {
+    //         insert(current->coefficient, current->exponent);
+    //         current = current->next;
+    //     }
+    // }
+
+    // return *this;
+        // Self-assignment guard
+    // if (this != &other)
+    // {
+    //     // Clear current polynomial to avoid memory leaks
+    //     clear();
+        
+    //     // Ensure head and tail are reset
+    //     head = nullptr;
+    //     tail = nullptr;
+        
+    //     // Deep copy of other polynomial
+    //     Node* current = other.head;
+    //     while (current != nullptr)
+    //     {
+    //         // Create new nodes for each term and insert them
+    //         insert(current->coefficient, current->exponent);
+    //         current = current->next;
+    //     }
+    // }
+    // return *this;
+
+    if (this != &other) {
+        clear();  // Clean up existing list
+        Node* temp = other.head;
+        while (temp != nullptr) {
+            insert(temp->coefficient, temp->exponent);
+            temp = temp->next;
         }
     }
-
     return *this;
 }
 
@@ -595,9 +632,13 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
         remainder = (remainder - multiple);
     }
 
-    Polynomial returnPoly;
-    *this = remainder;
-    returnPoly = *this;
+    // Polynomial returnPoly;
+    // *this = remainder;
+    // returnPoly = *this;
+    // *this = original;
+    // return returnPoly;
+    Polynomial returnPoly = std::move(remainder); // Use std::move to avoid copying
     *this = original;
     return returnPoly;
+
 }
