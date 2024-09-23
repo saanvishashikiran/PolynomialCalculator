@@ -536,69 +536,49 @@ void Polynomial::print() const
 
 int Polynomial::evaluate(int x) const 
 {
-    int evaluatedPoly = 0;
-    Node* current = head;
-
-    while (current)
+    //checking if the list is empty
+    if (head == nullptr)
     {
-        int evaluatedTerm = current->coefficient * pow(x, current->exponent);
-        evaluatedPoly = evaluatedPoly + evaluatedTerm;
-        current = current->next;
+        return 0; 
+    }
 
-        // //horner's method
-        // cout << "Evaluating: (current result * " << x << ") + " << current->coefficient << endl;
-        // evaluatedPoly = (evaluatedPoly * x) + current->coefficient;
-        // cout << "Current evaluatedPoly: " << evaluatedPoly << endl;
-        // current = current->next;
+    //finding the highest exponent in the polynomial
+    int highestDegreeExp = 0;
+    Node* current = head;
+    while (current != nullptr)
+    {
+        if (current->exponent > highestDegreeExp)
+        {
+            highestDegreeExp = current->exponent;
+        }
+        current = current->next;
+    }
+
+    //creating an array to store coefficients, and initializing to 0
+    std::vector<int> coefficients(highestDegreeExp + 1, 0);
+
+    //filling the coefficients array with polynomial terms
+    current = head;
+    while (current != nullptr)
+    {
+        if (current->exponent <= highestDegreeExp) 
+        {
+            coefficients[current->exponent] = current->coefficient;
+        }
+        current = current->next;
+    }
+
+    //evaluating the polynomial using the coefficients array
+    int evaluatedPoly = 0;
+    int currentPowerOfX = 1;  //x^0 = 1
+
+    for (int i = 0; i <= highestDegreeExp; i++)
+    {
+        evaluatedPoly += coefficients[i] * currentPowerOfX;
+        currentPowerOfX *= x;  //updating x^i for the next term
     }
 
     return evaluatedPoly;
-
-    // int evaluatedPoly = 10; // Start with the constant term
-    // int xPower = 1; // This will represent x^1, starting with x^0 = 1
-
-    // Node* current = head;
-
-    // while (current)
-    // {
-    //     // Calculate the next power of x
-    //     xPower *= x; // This gives us x^n for the current term
-
-    //     cout << "Evaluating: (current result * " << x << ") + " << current->coefficient << endl;
-
-    //     // Add the current term's contribution
-    //     evaluatedPoly += current->coefficient * xPower;
-
-    //     cout << "Current evaluatedPoly: " << evaluatedPoly << endl;
-
-    //     current = current->next; // Move to the next term
-    // }
-
-    // return evaluatedPoly;
-
-    // int evaluatedPoly = 0; // Initialize the evaluated polynomial
-    // Node* current = head;
-    
-    // // Initialize xPower to represent x^1
-    // int xPower = x; // Start with x^1
-
-    // // Process the first term separately
-    // if (current) {
-    //     evaluatedPoly += current->coefficient; // Add the constant term if exists
-    //     current = current->next; // Move to the next term
-    // }
-
-    // // Process subsequent terms
-    // while (current)
-    // {
-    //     cout << "Evaluating: (current result * " << x << ") + " << current->coefficient << endl;
-    //     evaluatedPoly += current->coefficient * xPower; // Add the current term's contribution
-    //     xPower *= x; // Update xPower for the next term (x^n)
-    //     cout << "Current evaluatedPoly: " << evaluatedPoly << endl;
-    //     current = current->next; // Move to the next term
-    // }
-
-    // return evaluatedPoly;
 }
 
 
