@@ -9,7 +9,8 @@ int main() {
     Polynomial* polynomial1 = nullptr;
     Polynomial* polynomial2 = nullptr;
 
-    cout << "Enter one of the following commands: ZERO, ARBITRARY, PRINT, EVAL, ADD, SUB, MULT, EXP, MOD, QUIT" << endl;
+    cout << "Welcome! To use this polynomial calculator, type one of the following commands and hit enter before inputting your polynomial in the specified format." << endl;
+    cout << "Enter one of the following commands: ZERO, ARBITRARY, PRINT, EVAL, ADD, SUB, MULT, EXP, MOD, QUIT." << endl;
     
     while (true) {
         cout << "> "; 
@@ -84,7 +85,7 @@ int main() {
 
 
         } else if (command == "EVAL") {
-            cout << "Enter the polynomial you would like to evaluate and the x value you want evaluate at." << endl;
+            cout << "Enter the polynomial you would like to evaluate followed by the x value you want evaluate at." << endl;
             string input;
             getline(cin, input);
             std::string polynomialPart = input.substr(0, input.find_last_of(' '));
