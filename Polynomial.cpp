@@ -384,13 +384,11 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
  * nodes in larger polynomial, which adds the nodes to the end of the       *
  * result polynomial.                                                       *
  *                                                                          *
- * Runtime Analysis: O(n+m) because the first loop has runtime O(n) from    *
- * iterating through both polynomials until the shorter polynomial ends,    *
- * and the second loop runs through the remaining nodes in the longer       *
- * polynomial, which is O(m). The runtime of the second loop is O(m)        *
- * because we do not know the number of remaining nodes!                    *
- * O(n+m) is the length of the larger polynomial, which will be entirely    *
- * traversed in this function.                                              *
+ * Runtime Analysis: O(n+m) where n and m are the highest powers of the two *
+ * polynomials because the first loop has runtime O(n) from iterating       *
+ * through both polynomials until the shorter polynomial ends, and the      *
+ * second loop runs through the remaining nodes in the longer polynomial,   *
+ * which will be O(m).                                                      *
  ****************************************************************************/
 
 Polynomial& Polynomial::operator+(const Polynomial& other) 
@@ -502,13 +500,11 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
  * nodes in larger polynomial, which adds the nodes to the end of the       *
  * result polynomial, negating the coefficients to account for subtraction. *
  *                                                                          *
- * Runtime Analysis: O(n+m) because the first loop has runtime O(n) from    *
- * iterating through both polynomials until the shorter polynomial ends,    *
- * and the second loop runs through the remaining nodes in the longer       *
- * polynomial, which is O(m). The runtime of the second loop is O(m)        *
- * because we do not know the number of remaining nodes!                    *
- * O(n+m) is the length of the larger polynomial, which will be entirely    *
- * traversed in this function.                                              *
+ * Runtime Analysis: O(n+m) where n and m are the highest powers of the two *
+ * polynomials because the first loop has runtime O(n) from iterating       *
+ * through both polynomials until the shorter polynomial ends, and the      *
+ * second loop runs through the remaining nodes in the longer polynomial,   *
+ * which will be O(m).                                                      *
  ****************************************************************************/
 
 Polynomial& Polynomial::operator-(const Polynomial& other) 
@@ -831,9 +827,15 @@ int Polynomial::evaluate(int x) const
  * If it is even, I call exponentiate with n/2 and then set result to y*y   *
  * before cleaning up. This rationale is rooted in the idea that when a     *
  * term is odd, it needs an extra multiplication by the base (remainder of  * 
- * dividing n by 2).                                                        *    
+ * dividing n by 2, which we are doing to make expontiation efficient).     *    
  *                                                                          *
- * Runtime Analysis: O(n^2logn) because                                     *                                                   
+ * Runtime Analysis: O(n^2log(m)) where n is the highest power of the       *
+ * polynomial and m is the exponent. My overloaded multiplication           *
+ * operator, which I call in this function, has a runtime of O(n^2), and    *
+ * there are log(m) recursive calls. I call cleanup() in this function,     * 
+ * but cleanup()'s O(n^2) runtime is absorbed into the runtime because      *
+ * O(n^2+n^2)=O(2n^2) which simplifies to O(n^2) for runtime purposes. The  *
+ * O(n) copy constructor runtime is dominated by the O(n^2) overall runtime!*                                                   
  ****************************************************************************/
 
 Polynomial* Polynomial::exponentiate(int n)  
@@ -883,6 +885,26 @@ Polynomial* Polynomial::exponentiate(int n)
 
 /****************************************************************************
  *              Polynomial Overloaded Modulus Assignment Operator           *
+ * Rationale: First, I checked to make sure that the leading coefficient    *
+ * is not empty and has a leading coefficient of 1. I then called my copy   *
+ * constructor to make a copy of the current polynomial called remainder,   *
+ * and also made a copy of the current polynomial called original (for      *
+ * later restoration). Then, I use nested while loops to reverse through    *
+ * the polynomials. The outer loop continues as long as remainder head is   *
+ * not nullptr and the head exponent is greater than that of the divisor.   *
+ * In the loop, I find exponent difference and coefficient of remainder     *
+ * before declaring a multiple polynomial and traversing the divisor.       *
+ * My strategy is inserting the multiplied terms into the multiple poly,    *
+ * and subtracting that multiple from remainder outside the inner loop, to  *
+ * mock the structure of polynomial long division. I then store the         *
+ * remainder in a return polynomial and then restore *this to the original. *
+ * The result is the remainder of polynomial division!!                     *
+ *                                                                          *
+ * Runtime Analysis: O(n^2) because while loops have linear runtime and     *
+ * nesting them results in O(n^2) runtime. Everything in the innermost loop *
+ * has a runtime of O(1). I call the copy constructor, which has O(n)       *
+ * runtime, but this call is outside of the loops so this O(n) runtime is   *
+ * dominated by the O(n^2) of the overall function!                         *
  ****************************************************************************/
 
 Polynomial Polynomial::operator%=(const Polynomial& other)
@@ -903,7 +925,7 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
     //polynomial long division!!
     while (remainder.head != nullptr && (remainder.head->exponent >= other.head->exponent))
     {
-        //finding exponent difference to know what to multiply by during long division
+        //finding exponent difference and coefficient to know what to multiply by during long division
         int expDiff = remainder.head->exponent - other.head->exponent;
         int coeff = remainder.head->coefficient;
 

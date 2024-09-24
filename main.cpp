@@ -9,8 +9,8 @@ int main() {
     Polynomial* polynomial1 = nullptr;
     Polynomial* polynomial2 = nullptr;
 
-    cout << "Welcome! To use this polynomial calculator, type one of the following commands and hit enter before inputting your polynomial in the specified format." << endl;
-    cout << "Enter one of the following commands: ZERO, ARBITRARY, PRINT, EVAL, ADD, SUB, MULT, EXP, MOD, QUIT." << endl;
+    cout << "Welcome! To use this polynomial calculator, type a command along with your polynomial in the specified format in a single line (exact same format as listed in test data)." << endl;
+    cout << "Enter one of the following commands: ZERO, ARBITRARY, PRINT, EVAL, ADD, SUB, MULT, EXP, MOD, QUIT followed by the necessary inputs!" << endl;
     
     while (true) {
         cout << "> "; 
@@ -25,7 +25,7 @@ int main() {
             command = command.substr(start, end - start + 1);
         }
         
-        if (command == "ZERO") {
+        if (command.substr(0,4) == "ZERO") {
             if (polynomial1)
             {
                 delete polynomial1;
@@ -37,17 +37,15 @@ int main() {
 
 
 
-        } else if (command == "ARBITRARY") {
+        } else if (command.substr(0,9) == "ARBITRARY") {
             if (polynomial1)
             {
                 delete polynomial1;
             }
             
-            cout << "Enter an arbitrary polynomial: " << endl;
-            string input;
-            getline(cin, input); //reading the rest of the line for polynomial input
-
+            string input = command.substr(10);
             polynomial1 = new Polynomial(input);   
+
             cout << "This is your input" << endl;
             if (polynomial1) 
             {
@@ -60,17 +58,15 @@ int main() {
             }
 
 
-        } else if (command == "PRINT") {
+        } else if (command.substr(0,5) == "PRINT") {
             if (polynomial1)
             {
                 delete polynomial1;
             }
 
-            cout << "Enter the polynomial you would like to print: " << endl;
-            string input;
-            getline(cin, input);
-
+            string input = command.substr(6);
             polynomial1 = new Polynomial(input);
+
             cout << "Printed polynomial input: " << endl;
             if (polynomial1) 
             {
@@ -84,10 +80,8 @@ int main() {
 
 
 
-        } else if (command == "EVAL") {
-            cout << "Enter the polynomial you would like to evaluate followed by the x value you want evaluate at." << endl;
-            string input;
-            getline(cin, input);
+        } else if (command.substr(0,4) == "EVAL") {
+            string input = command.substr(5);
             std::string polynomialPart = input.substr(0, input.find_last_of(' '));
             int x = std::stoi(input.substr(input.find_last_of(' ') + 1)); // Extract x from input
 
@@ -99,7 +93,7 @@ int main() {
 
 
 
-        } else if (command == "ADD") {
+        } else if (command.substr(0,3) == "ADD") {
             if (polynomial1)
             {
                 polynomial1->reset();
@@ -109,9 +103,7 @@ int main() {
                 polynomial2->reset();
             }
 
-            string input;
-            cout << "Enter both polynomials you would like to add as a single string: " << endl;
-            getline(cin, input);
+            string input = command.substr(4);
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to add ";
@@ -137,7 +129,7 @@ int main() {
         
 
 
-        } else if (command == "SUB") {
+        } else if (command.substr(0,3) == "SUB") {
             if (polynomial1)
             {
                 polynomial1->reset();
@@ -147,9 +139,7 @@ int main() {
                 polynomial2->reset();
             }
             
-            string input;
-            cout << "Enter both polynomials you would like to subtract as a single string: " << endl;
-            getline(cin, input);
+            string input = command.substr(4);
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to subtract ";
@@ -175,7 +165,7 @@ int main() {
 
 
 
-        } else if (command == "MULT") {
+        } else if (command.substr(0,4) == "MULT") {
             if (polynomial1)
             {
                 polynomial1->reset();
@@ -184,9 +174,8 @@ int main() {
             {
                 polynomial2->reset();
             }
-            string input;
-            cout << "Enter both polynomials you would like to multiply as a single string: " << endl;
-            getline(cin, input);
+
+            string input = command.substr(5);
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to multiply ";
@@ -212,10 +201,8 @@ int main() {
             
 
 
-        } else if (command == "EXP") {
-            cout << "Enter the polynomial and the power you want to exponentiate to as a single string: " << endl;
-            string input;
-            getline(cin, input);
+        } else if (command.substr(0,3) == "EXP") {
+            string input = command.substr(4);
 
             //trimming leading and trailing whitespace
             size_t start = input.find_first_not_of(" \t");
@@ -274,7 +261,7 @@ int main() {
 
 
 
-        } else if (command == "MOD") {
+        } else if (command.substr(0,3) == "MOD") {
             if (polynomial1)
             {
                 polynomial1->reset();
@@ -283,9 +270,8 @@ int main() {
             {
                 polynomial2->reset();
             }
-            string input;
-            cout << "Enter both polynomials you would like to conduct modulus with as a single string: " << endl;
-            getline(cin, input);
+            
+            string input = command.substr(4);
 
             if (readPolynomials(input, polynomial1, polynomial2)) {
                 cout << "You are asking to calculate ";
@@ -313,7 +299,7 @@ int main() {
             
             
 
-        } else if (command == "QUIT") {
+        } else if (command.substr(0,4) == "QUIT") {
             delete polynomial1;
             delete polynomial2;
             return 0;
