@@ -10,6 +10,18 @@ using namespace std;
 
 /****************************************************************************
  *                 Polynomial Parametrized Constructor                      *
+ * Rationale: This consturctor operates by reading in a polynomial string,  *
+ * storing # of terms in a variable, then iterating through the polynomial  *
+ * using a for loop to read each term's coefficient and exponent into new   *
+ * nodes. This loop is helpful because iterating from i = 0 to the number   *
+ * of terms in the polynomial allows for the linked list to be initialized  *
+ * to the correct size. Also, since inputs are all in greatest to least     *
+ * exponent order, and only combined polynomials are inputted, the list is  *
+ * initialized in the correct order!                                        *
+ *                                                                          *
+ * Runtime Analysis: O(n) because for loops have linear runtime and all     *
+ * operations within this for loop have O(1) runtime, so the overall        *
+ * runtime will remain O(n).                                                *
  ****************************************************************************/
 
 Polynomial::Polynomial(const std::string& input) : head(nullptr) {
@@ -47,6 +59,22 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
 
 /****************************************************************************
  *                       Polynomial Copy Constructor                        *
+ * Rationale: This constructor operates by creating a new node for the new  *
+ * polynomial and traversing through the remaining nodes of the source      *
+ * polynomial, creating a new node in the current polynomial each time and  *
+ * copying the coefficient and exponent from the corresponding node in the  *
+ * source polynomial. Before ending the loop, I move the current and source *
+ * pointers to point to the next term so that I can repeat the process      *
+ * until the end of the source polynomial to make an accurate copy! This    *
+ * constructor is useful because it allows for copying polynomials, and     *
+ * therefore saving the original polynomial for restoration at the end of   *
+ * a function when necessary.
+ *                                                                          *
+ * Runtime Analysis: O(n) because while loops have linear runtime and all   *
+ * operations within the loop have O(1) runtime. This constructor is never  *
+ * called within any loops throughout the rest of my program, so it does    *
+ * impact the runtimes of the functions it is called within (the O(n) is    *
+ * added and absorbed into runtimes).
  ****************************************************************************/
 
 Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
@@ -58,15 +86,17 @@ Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
 
     //creating new node for head of current polynomial
     head = new Node(other.head->coefficient, other.head->exponent);
-    Node* currentOther = other.head->next;
-    Node* currentThis = head;
+    Node* currentOther = other.head->next; //pointer for traversing source polynomial
+    Node* currentThis = head; //pointer for traversing new polynomial
 
     //iterating through remaining nodes of source polynomial
     while (currentOther != nullptr)
     {
-        //creating a new node in current, copying coeff and exp from source
+        //creating a new node in current polynomial, copying coeff and exp from source
         currentThis->next = new Node(currentOther->coefficient, currentOther->exponent);
-        currentThis = currentThis->next;
+
+        //moving current and source pointers, respectively
+        currentThis = currentThis->next; 
         currentOther = currentOther->next;
     }
 }
@@ -75,6 +105,11 @@ Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
 
 /****************************************************************************
  *                         Polynomial Destructor                            *
+ * Rationale: Calls clear helper function to delete a polynomial            *
+ *                                                                          *
+ * Runtime Analysis: clear() has a runtime of O(n) but the destructor is    *
+ * never called in any loops within functions, and the O(n) is thus         *
+ * absorbed into runtimes.                                                  *
  ****************************************************************************/
 Polynomial::~Polynomial()
 {
@@ -91,6 +126,15 @@ Polynomial::~Polynomial()
 
 /****************************************************************************
  *                         Polynomial Clear Helper Function                 *
+ * Rationale: Beginning at head, this function iterates through the linked  *
+ * list, setting next to the node after current, deleting current, and then *
+ * setting current to next so that the process can repeat itself until      *
+ * the end of the linked list. In order to avoid dangling pointers, I set   *
+ * head and tail to nullptr at the end of the function.                     *
+ *                                                                          *
+ * Runtime Analysis: O(n) because while loops have linear runtime and the   *
+ * procedures within the loop have O(1) runtime, so the overall function    *
+ * runtime is O(n).                                                         *
  ****************************************************************************/
 
 void Polynomial::clear() 
@@ -113,6 +157,14 @@ void Polynomial::clear()
 
 /****************************************************************************
  *                        Polynomial Insert Helper Function                 *
+ * Rationale: This function creates a new node for the given coefficient    *
+ * and exponent, and if the list is empty, sets both the head and tail to   *
+ * the new node. If the list is not empty, tail is linked to the new node,  *
+ * thus appending the new node to the end of the list. This function is     *
+ * useful because it can be called without skewing runtimes!!               *
+ *                                                                          *
+ * Runtime Analysis: O(1) because no loops are used, so every operation     *
+ * within the function will only run one time!                              *
  ****************************************************************************/
 void Polynomial::insert(int coefficient, int exponent) 
 {
@@ -134,6 +186,32 @@ void Polynomial::insert(int coefficient, int exponent)
 
 /****************************************************************************
  *                       Polynomial Cleanup Helper Function                 *
+ * Rationale: This function starts by checking if the list is empty. Then,  *
+ * it declares current and prev pointers before declaring a bool to track   *
+ * whether the list is sorted. Using a while loop within a do while loop    *
+ * I used a bubble sort inspired technique to order the polynomial by       *
+ * exponent. The outer loop runs as long as the list is not sorted. Since   *
+ * sorted is updated to true before the inner loop, it will remain true if  *
+ * the conditions for the inner loop are not met, allowing for the do while *
+ * loop to be broken out of once the entire polynomial has been processed.  *
+ * The inner loop swaps nodes when the next node has a higher degree        *
+ * exponent, and moves on if the current node has the higher degree.        *
+ * After sortinng terms according to order, the function has another while  *
+ * loop that runs as through the entire list again, this time to combine    *
+ * like terms and elimiate any 0 terms. It first combines terms when the    *
+ * exponent degrees of current and next are equal. Then, it checks if the   *
+ * coefficient is 0 and if it is, deletes the node and relinks the list.    *
+ * This process repeats until the entire list has been checked, and our     *
+ * reuslt is a fully sorted and combined polynomial. Breaking insert into   *
+ * insert and cleanup allows for me to maintain the correct runtimes in my  *
+ * operators!                                                               *
+ *                                                                          *
+ * Runtime Analysis: O(n^2) because of the nested while loops. Everything   *
+ * within the innermost while loop is O(1). This gives us O(n^2+n) for the  *
+ * nested loops and the non-nested loop, so our final runtime for cleanup   *
+ * is O(n^2). I only call this function in operator* and exponentiation,    *
+ * which are both supposed to be O(n^2), so the O(n^2) is absorbed into     *
+ * their runtimes, as I am careful to not call it within loops!             *
  ****************************************************************************/
 
 void Polynomial::cleanup() {
@@ -166,6 +244,7 @@ void Polynomial::cleanup() {
                 }
                 prev = temp;
             } else {
+                //no swap is needed because the current node has the higher exponent degree!
                 prev = current;
                 current = current->next;
             }
@@ -208,6 +287,19 @@ void Polynomial::cleanup() {
 
 /****************************************************************************
  *              Polynomial Reading Polynomials Helper Function              *
+ * Rationale: This function allows for me to read input strings of 2        *
+ * polynomials and store each polynomial in polynomial1 and polynomial2     *
+ * before I call my methods to perform operations on the two polynomials in *
+ * main. It operates by reading in number of terms in each polynomial and   *
+ * then reading through the string to essentially separate the input string *
+ * into a polynomial1 string and a polynomial2 string, and then converting  *
+ * each string to a new polynomial1 & polynomial2. The logic is the same    *
+ * for reading each polynomial in, and this function returns a bool rather  *
+ * than an output so that it just allows for polynomial creation to prepare *
+ * for function calls in main.                                              *
+ *                                                                          *
+ * Runtime Analysis: O(n) because for loops have linear runtime and the     *
+ * contents of these for loops have O(1) runtime.                           *
  ****************************************************************************/
 
 bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*& polynomial2) {
@@ -234,7 +326,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
         polynomial1String += to_string(coefficient) + " " + to_string(exponent) + " ";
     }
 
-    //debugging output for first polynomial
+    //printing first polynomial
     cout << "Parsed polynomial 1: " << polynomial1String << endl;
 
     //initializing polymomial1 with the parsed string
@@ -260,7 +352,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
         polynomial2String += to_string(coefficient) + " " + to_string(exponent) + " ";
     }
 
-    //debugging output for second polynomial
+    //printing second polynomial
     cout << "Parsed polynomial 2: " << polynomial2String << "\n" << endl;
 
     //initializing polynomial2 with the parsed string
@@ -280,6 +372,25 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
 
 /****************************************************************************
  *                  Polynomial Overloaded Addition Operator                 *
+ * Rationale: This operator works by traversing both polynomials and        *
+ * stopping when one of them ends. The first loop moves onto the next node  *
+ * if the current1 polynomial has the higher exponent, and if not, a new    *
+ * node for current2 is created. As nodes are added in, they are linked to  *
+ * the rest of the list. If the coefficient of a node in current1 is equal  *
+ * to the coefficient of the corresponding node in current2, the            *
+ * coefficients are added. If the new coefficient is 0, the node is skipped.*
+ * If not, prev is updated and we move onto the rest of the list.           *
+ * Finally, I have another while loop to iterate through the remaining      *
+ * nodes in larger polynomial, which adds the nodes to the end of the       *
+ * result polynomial.                                                       *
+ *                                                                          *
+ * Runtime Analysis: O(n+m) because the first loop has runtime O(n) from    *
+ * iterating through both polynomials until the shorter polynomial ends,    *
+ * and the second loop runs through the remaining nodes in the longer       *
+ * polynomial, which is O(m). The runtime of the second loop is O(m)        *
+ * because we do not know the number of remaining nodes!                    *
+ * O(n+m) is the length of the larger polynomial, which will be entirely    *
+ * traversed in this function.                                              *
  ****************************************************************************/
 
 Polynomial& Polynomial::operator+(const Polynomial& other) 
@@ -292,7 +403,7 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
     //traversing both polynomials, stopping when either one ends
     while (current1 != nullptr && current2 != nullptr)
     {   
-        //moving to the next term in current1 has a higher exponent
+        //moving to the next term if current1 has a higher exponent
         if (current1->exponent > current2->exponent)
         {
             prev = current1;
@@ -378,6 +489,26 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
 
 /****************************************************************************
  *                  Polynomial Overloaded Subtraction Operator              *
+ * Rationale: This operator works by traversing both polynomials and        *
+ * stopping when one of them ends. The first loop moves onto the next node  *
+ * if the current1 polynomial has the higher exponent, and if not, a new    *
+ * node for current2 is created, which negates the coefficient to account   *
+ * for subtraction. As nodes are added in, they are linked to               *
+ * the rest of the list. If the coefficient of a node in current1 is equal  *
+ * to the coefficient of the corresponding node in current2, the            *
+ * coefficients are subtracted. If the new coefficient is 0, the node is    *
+ * skipped. If not, prev is updated and we move onto the rest of the list.  *
+ * Finally, I have another while loop to iterate through the remaining      *
+ * nodes in larger polynomial, which adds the nodes to the end of the       *
+ * result polynomial, negating the coefficients to account for subtraction. *
+ *                                                                          *
+ * Runtime Analysis: O(n+m) because the first loop has runtime O(n) from    *
+ * iterating through both polynomials until the shorter polynomial ends,    *
+ * and the second loop runs through the remaining nodes in the longer       *
+ * polynomial, which is O(m). The runtime of the second loop is O(m)        *
+ * because we do not know the number of remaining nodes!                    *
+ * O(n+m) is the length of the larger polynomial, which will be entirely    *
+ * traversed in this function.                                              *
  ****************************************************************************/
 
 Polynomial& Polynomial::operator-(const Polynomial& other) 
@@ -477,6 +608,20 @@ Polynomial& Polynomial::operator-(const Polynomial& other)
 
 /****************************************************************************
  *               Polynomial Overloaded Multiplication Operator              *
+ * Rationale: This function copies the original polynomial into             *
+ * polynomial1 before clearing the original polynomial. I declare a pointer *
+ * to the original polynomial and then use nested while loops to iterate    *
+ * through both linked lists. In the innermost while loop that iterates     *
+ * through the second polynomial, I multiply coefficients and add exponents *
+ * before adding these new coefficient and exponent values to the list with *
+ * my insert function. Outside of the loops, I call cleanup to sort the     *
+ * list, combine like terms, and eliminate 0s before returning.             *
+ *                                                                          *
+ * Runtime Analysis: O(n^2) because while loops have linear runtime and     *
+ * nesting them gives me O(n^2). All operations within innermost while loop *
+ * have O(1) runtime. Outside of the loops, I call cleanup() which has      *
+ * O(n^2) runtime, but the runtimes would be added O(n^2+n^2) = O(2n^2)     *
+ * and simplified back to O(n^2) so this function runs in the proper time!  *
  ****************************************************************************/
 
 Polynomial& Polynomial::operator*(const Polynomial& other) 
@@ -492,7 +637,6 @@ Polynomial& Polynomial::operator*(const Polynomial& other)
         Node* current2 = other.head;
         while (current2 != nullptr) // moving through linked lists and multiplying terms
         {
-            //insert(current1->coefficient * current2->coefficient, current1->exponent + current2->exponent); 
             int newCoefficient = current1->coefficient * current2->coefficient;
             int newExponent = current1->exponent + current2->exponent;
 
@@ -514,6 +658,16 @@ Polynomial& Polynomial::operator*(const Polynomial& other)
 
 /****************************************************************************
  *                 Polynomial Overloaded Assignment Operator                *
+ * Rationale: This operator operates by looping through the nodes of the    *
+ * other polynomial after checking for self assignment, and calling insert  *
+ * to insert the other polynomial's coefficients and exponents after        *
+ * clearing the existing list. This operator is useful because it allows me *
+ * to set one polynomial equal to another.                                  *
+ * 
+ * Runtime Analysis: O(n) because of while loop with O(1) contents as while *
+ * loops have linear runtime. This operator is only called in instances     *
+ * where the O(n) runtime will be dominated by or absorbed into the runtime *
+ * of the function it is called in!                                         *
  ****************************************************************************/
 
 Polynomial& Polynomial::operator=(const Polynomial& other)
@@ -539,12 +693,23 @@ Polynomial& Polynomial::operator=(const Polynomial& other)
 
 /****************************************************************************
  *                          Polynomial Print Function                       *
+ * Rationale: This function prints 0 for polynomials initialized to zero.   *
+ * If the list is not empty, it loops through the list with a while loop to *
+ * ensure that all positive terms after the first term are preceded by a    *
+ * plus sign, and all negative terms are preceded by a negative sign.       *
+ * Since signs have been taken care of, I then print the abs value of       *
+ * non-zero coefficients before printing x to the degree of the             *
+ * corresponding coeffiicent if the exponent degree is greater than 0.      *
+ *                                                                          *
+ * Runtime Analysis: O(n) because while loops have linear runtime and all   *
+ * procedures inside of the while loop have O(1) runtime.                   *
  ****************************************************************************/
 
 void Polynomial::print() const 
 {
     if (!head) {
         cout << "0" << endl; //printing "1 0 0" for polynomials initialized to zero
+        return;
     }
 
     Node* current = head;
@@ -555,7 +720,7 @@ void Polynomial::print() const
         {
             cout << " + ";
         }
-        else if (current->coefficient < 0) //making sure all negative terms are preceded by a minus sign
+        else if (current->coefficient < 0) //making sure all negative terms are preceded by a negative sign
         {
             cout << " - ";
         }
@@ -580,6 +745,26 @@ void Polynomial::print() const
 
 /****************************************************************************
  *                       Polynomial Evaluate Function                       *
+ * Rationale: After checking if the list is empty, this function uses a     *
+ * while loop to loop through the inputted polynomial list and find the     *
+ * highest degree exponent in the list. Then, I initialize a vector to      *
+ * store coefficients that is one larger than the size of the highest deg   *
+ * exponent to account for a trailing constant term. The vector is          *
+ * initialized to 0 so that there are placeholder 0s for missing terms.     *
+ * This allows for my eval method to work as intended. Next, I fill the     *
+ * coefficients array with polynomial terms (place in the array corresponds)*
+ * with exponent degree, allowing for this loop to correctly match          *
+ * coefficients with their correpsonding exponenents. I fill in the array   *
+ * for the terms that exist, leaving 0 coefficients for the missing terms.  *
+ * Then, I use the "linear" method that begins with the last term and adds  *
+ * coefficient[i] * the current x power to the evaluatedPoly variable       *
+ * before updating the current x power to the next degree and then moving   *
+ * onto the next coefficient. For example, if I know the value of x,        *
+ * I calculate x*x=x^2, right before restarting the loop, and repeat this.  *
+ *                                                                          *
+ * Runtime Analysis: O(n) because this function has three separate loops    *
+ * (not nested) and everything within each loop is O(1). For loops and      *
+ * while loops have linear runtime.                                         *
  ****************************************************************************/
 
 int Polynomial::evaluate(int x) const 
@@ -603,7 +788,7 @@ int Polynomial::evaluate(int x) const
     }
 
     //creating an array to store coefficients and initializing to 0 (allowing for placeholder 0s)
-    std::vector<int> coefficients(highestDegreeExp + 1, 0);
+    vector<int> coefficients(highestDegreeExp + 1, 0);
 
     //filling the coefficients array with polynomial terms
     //rationale: placeholder 0s for missing terms allows for horner's method to function as intended
@@ -635,6 +820,20 @@ int Polynomial::evaluate(int x) const
 
 /****************************************************************************
  *                       Polynomial Exponentiate Function                   *
+ * Rationale: I checked to see if exponent is non-negative, then checked    *
+ * if the input n is 0 (returned 1 in this case). After these checks, I     *
+ * copied my original polynomial into polynomial and intialized a result to *
+ * "1 1 0". My approach to exponentiation implements recursion. I declare a *
+ * polynomial y that is equal to the original polynomial and then check if  *
+ * the inputted n value is odd or even. If it is odd, I call                *
+ * exponentiate, feeding in ((n-1)/2) before setting result to y*y,         *
+ * cleaning up, and then multiplying result by polyomial and cleaning up.   *
+ * If it is even, I call exponentiate with n/2 and then set result to y*y   *
+ * before cleaning up. This rationale is rooted in the idea that when a     *
+ * term is odd, it needs an extra multiplication by the base (remainder of  * 
+ * dividing n by 2).                                                        *    
+ *                                                                          *
+ * Runtime Analysis: O(n^2logn) because                                     *                                                   
  ****************************************************************************/
 
 Polynomial* Polynomial::exponentiate(int n)  
@@ -691,7 +890,7 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
     //checking if the divisor is in the valid format (not empty and leading coefficient of 1)
     if (other.head == nullptr || other.head->coefficient != 1)
     {
-        cout << "The leading coefficient of the divisor polynomial must be 1." << endl;
+        cout << "The leading coefficient of the divisor polynomial must be 1 and the divisor polynomial must not be empty." << endl;
         return *this;
     }
 
@@ -727,7 +926,7 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
     }
 
     //moving remainder polynomial
-    Polynomial returnPoly = std::move(remainder); //using move to avoid copying
+    Polynomial returnPoly = remainder; //using move to avoid copying
 
     //restoring original polynomia;
     *this = original;
