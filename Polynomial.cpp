@@ -13,25 +13,28 @@ using namespace std;
  ****************************************************************************/
 
 Polynomial::Polynomial(const std::string& input) : head(nullptr) {
+    //reading in input
     istringstream iss(input);
     int numberOfTerms;
     iss >> numberOfTerms;
 
+    //making a current pointer and initializing to nullptr
     Node* current = nullptr;
 
+    //iterating through polynomial
     for (int i = 0; i < numberOfTerms; i++)
     {
         int coefficient, exponent;
-        iss >> coefficient >> exponent;
+        iss >> coefficient >> exponent; //reading into coefficient and exponent variables
         if (coefficient != 0)
         {
-            Node* newNode = new Node(coefficient, exponent);
-            if (head == nullptr)
+            Node* newNode = new Node(coefficient, exponent); //initializing node
+            if (head == nullptr) //case where list is empty - adding in new node
             {
                 head = newNode;
                 current = head;
             }
-            else
+            else //case where list is not empty - adding in new node
             {
                 current->next = newNode;
                 current = newNode;
@@ -47,17 +50,21 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
  ****************************************************************************/
 
 Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
+    //checking if list is empty
     if (other.head == nullptr)
     {
         return;
     }
 
+    //creating new node for head of current polynomial
     head = new Node(other.head->coefficient, other.head->exponent);
     Node* currentOther = other.head->next;
     Node* currentThis = head;
 
+    //iterating through remaining nodes of source polynomial
     while (currentOther != nullptr)
     {
+        //creating a new node in current, copying coeff and exp from source
         currentThis->next = new Node(currentOther->coefficient, currentOther->exponent);
         currentThis = currentThis->next;
         currentOther = currentOther->next;
@@ -71,7 +78,7 @@ Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
  ****************************************************************************/
 Polynomial::~Polynomial()
 {
-    clear();
+    clear(); //calling clear helper function
 }
 
 
@@ -88,13 +95,17 @@ Polynomial::~Polynomial()
 
 void Polynomial::clear() 
 {
-    Node* current = head;
+    Node* current = head; //starting at head
+
+    //iterating through linked list to delete each node
     while (current) {
         Node* next = current->next;
         delete current;  //freeing memory
-        current = next;
+        current = next; 
     }
-    head = nullptr;  //avoiding dangling pointers
+
+    //avoiding dangling pointers by setting head and tail to nullptr to indicate an empty list
+    head = nullptr;  
     tail = nullptr;  
 }
 
@@ -105,6 +116,7 @@ void Polynomial::clear()
  ****************************************************************************/
 void Polynomial::insert(int coefficient, int exponent) 
 {
+    //creating a new node for the given coeff and exp
     Node* newNode = new Node(coefficient, exponent);
     
     if (!head) {
@@ -113,7 +125,7 @@ void Polynomial::insert(int coefficient, int exponent)
         tail = newNode;
     } else {
         //linking the new node to the current tail if the list is not empty
-        tail->next = newNode;
+        tail->next = newNode; //setting next of current tail to the new node
         tail = newNode; //updating the tail to the new node
     }
 }
@@ -125,6 +137,7 @@ void Polynomial::insert(int coefficient, int exponent)
  ****************************************************************************/
 
 void Polynomial::cleanup() {
+    //checking if list is empty
     if (!head) return;
 
     Node* current = head;
@@ -202,7 +215,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
     
     int termsInPolynomial1 = 0, termsInPolynomial2 = 0;
     
-    //reading the number of terms in the first polynomial
+    //reading the # of terms in the first polynomial
     if (!(iss >> termsInPolynomial1)) {
         cout << "Error: Invalid input for terms in first polynomial." << endl;
         return false;
@@ -224,11 +237,11 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
     //debugging output for first polynomial
     cout << "Parsed polynomial 1: " << polynomial1String << endl;
 
-    //initializing poly1 with the parsed string
+    //initializing polymomial1 with the parsed string
     delete polynomial1;
     polynomial1 = new Polynomial(polynomial1String);
 
-    //reading the number of terms in the second polynomial
+    //reading the # of terms in the second polynomial
     if (!(iss >> termsInPolynomial2)) {
         cout << "Error: Invalid input for terms in second polynomial." << endl;
         return false;
@@ -250,7 +263,7 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
     //debugging output for second polynomial
     cout << "Parsed polynomial 2: " << polynomial2String << "\n" << endl;
 
-    //initializing poly2 with the parsed string
+    //initializing polynomial2 with the parsed string
     delete polynomial2;
     polynomial2 = new Polynomial(polynomial2String);
 
@@ -271,34 +284,42 @@ bool readPolynomials(const string& input, Polynomial*& polynomial1, Polynomial*&
 
 Polynomial& Polynomial::operator+(const Polynomial& other) 
 {
+    //declaring pointers
     Node* current1 = head;
     Node* current2 = other.head;
     Node* prev = nullptr;
 
+    //traversing both polynomials, stopping when either one ends
     while (current1 != nullptr && current2 != nullptr)
     {   
+        //moving to the next term in current1 has a higher exponent
         if (current1->exponent > current2->exponent)
         {
             prev = current1;
             current1 = current1->next;
         }
+        //creating a new node for current 2 if current2 has a higher exponent
         else if (current1->exponent < current2->exponent)
         {
             Node* newNode = new Node(current2->coefficient, current2->exponent);
             if (prev != nullptr)
             {
+                //linking to previous node if there is one
                 prev->next = newNode;
             }
             else 
             {
+                //case where there is no prev
                 head = newNode;
             }
+            //linking nodes and moving on
             newNode->next = current1;
             prev = newNode;
             current2 = current2->next;
         }
         else 
         {
+            //adding coefficients if exponents are equal
             current1->coefficient = current1->coefficient + current2->coefficient;
             if (current1->coefficient == 0)
             {
@@ -311,7 +332,7 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
                 {
                     head = current1->next;
                 }
-                delete current1;
+                delete current1; //freeing memory
                 if (prev != nullptr) 
                 {
                     current1 = prev->next;
@@ -323,6 +344,7 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
             }
             else
             {
+                //updating previous and moving on if coefficient is not 0
                 prev = current1;
                 current1 = current1->next;
             }
@@ -330,21 +352,25 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
         }
     }
 
+    //adding remaining current2 terms to the result
     while (current2 != nullptr) 
     {
         Node* newNode = new Node(current2->coefficient, current2->exponent);
         if (prev != nullptr) 
         {
-            prev->next = newNode;
+            prev->next = newNode; //linking to previous
         } 
         else 
         {
-            head = newNode;
+            head = newNode; //setting to head if there is no previous
         }
+
+        //updating previous to new node and moving on
         prev = newNode;
         current2 = current2->next;
     }
 
+    //returning modified polynomial!
     return *this;
 }
 
@@ -356,34 +382,43 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
 
 Polynomial& Polynomial::operator-(const Polynomial& other) 
 {
+    //declaring pointers
     Node* current1 = head;
     Node* current2 = other.head;
     Node* prev = nullptr;
 
+    //traversing both polynomials, stopping when either one ends
     while (current1 != nullptr && current2 != nullptr)
     {   
+        //moving to the next term in current1 has a higher exponent
         if (current1->exponent > current2->exponent)
         {
             prev = current1;
             current1 = current1->next;
         }
+        //creating a new node for current 2 if current2 has a higher exponent
         else if (current1->exponent < current2->exponent)
         {
+            //negating coefficient for subtraction!
             Node* newNode = new Node(-current2->coefficient, current2->exponent);
             if (prev != nullptr)
             {
+                //linking to previous node if there is one
                 prev->next = newNode;
             }
             else 
             {
+                //case where there is no prev
                 head = newNode;
             }
+            //linking nodes and moving on
             newNode->next = current1;
             prev = newNode;
             current2 = current2->next;
         }
         else 
         {
+            //subtracting coefficients if exponents are equal
             current1->coefficient = current1->coefficient - current2->coefficient;
             if (current1->coefficient == 0)
             {
@@ -396,7 +431,7 @@ Polynomial& Polynomial::operator-(const Polynomial& other)
                 {
                     head = current1->next;
                 }
-                delete current1;
+                delete current1; //freeing memory
                 if (prev != nullptr) 
                 {
                     current1 = prev->next;
@@ -408,6 +443,7 @@ Polynomial& Polynomial::operator-(const Polynomial& other)
             }
             else
             {
+                //updating previous and moving on if coefficient is not 0
                 prev = current1;
                 current1 = current1->next;
             }
@@ -415,21 +451,25 @@ Polynomial& Polynomial::operator-(const Polynomial& other)
         }
     }
 
+    //adding remaining current2 terms to the result
     while (current2 != nullptr) 
     {
         Node* newNode = new Node(-current2->coefficient, current2->exponent);
         if (prev != nullptr) 
         {
-            prev->next = newNode;
+            prev->next = newNode; //linking to previous
         } 
         else 
         {
-            head = newNode;
+            head = newNode; //setting to head if there is no previous
         }
+
+        //updating previous to new node and moving on
         prev = newNode;
         current2 = current2->next;
     }
 
+    //returning modified polynomial!
     return *this;
 }
 
@@ -464,7 +504,9 @@ Polynomial& Polynomial::operator*(const Polynomial& other)
         current1 = current1->next;
     }
 
+    //calling cleanup to organize and combine terms
     cleanup();
+
     return *this; //original has been modified!
 }
 
@@ -476,14 +518,20 @@ Polynomial& Polynomial::operator*(const Polynomial& other)
 
 Polynomial& Polynomial::operator=(const Polynomial& other)
 {
+    //checking for self-assignment
     if (this != &other) {
         clear();  //cleaning up existing list
-        Node* temp = other.head;
-        while (temp != nullptr) {
+        Node* temp = other.head; //temporary pointer
+
+        //iterating through nodes of other
+        while (temp != nullptr) { 
+            //inserting and moving on!
             insert(temp->coefficient, temp->exponent);
             temp = temp->next;
         }
     }
+
+    //returning current object
     return *this;
 }
 
@@ -554,10 +602,11 @@ int Polynomial::evaluate(int x) const
         current = current->next;
     }
 
-    //creating an array to store coefficients, and initializing to 0
+    //creating an array to store coefficients and initializing to 0 (allowing for placeholder 0s)
     std::vector<int> coefficients(highestDegreeExp + 1, 0);
 
     //filling the coefficients array with polynomial terms
+    //rationale: placeholder 0s for missing terms allows for horner's method to function as intended
     current = head;
     while (current != nullptr)
     {
@@ -570,11 +619,12 @@ int Polynomial::evaluate(int x) const
 
     //evaluating the polynomial using the coefficients array
     int evaluatedPoly = 0;
-    int currentPowerOfX = 1;  //x^0 = 1
+    int currentPowerOfX = 1;  
 
+    //iterating through array
     for (int i = 0; i <= highestDegreeExp; i++)
     {
-        evaluatedPoly += coefficients[i] * currentPowerOfX;
+        evaluatedPoly += coefficients[i] * currentPowerOfX; //updating final answer
         currentPowerOfX *= x;  //updating x^i for the next term
     }
 
@@ -595,6 +645,7 @@ Polynomial* Polynomial::exponentiate(int n)
         return this;
     }
 
+    //returning 1
     if (n == 0)
     {
         *this = Polynomial("1 1 0");
@@ -637,34 +688,50 @@ Polynomial* Polynomial::exponentiate(int n)
 
 Polynomial Polynomial::operator%=(const Polynomial& other)
 {
+    //checking if the divisor is in the valid format (not empty and leading coefficient of 1)
     if (other.head == nullptr || other.head->coefficient != 1)
     {
         cout << "The leading coefficient of the divisor polynomial must be 1." << endl;
         return *this;
     }
 
+    //creating a copy of current polynomial for remainder
     Polynomial remainder(*this);
+
+    //creating a copy of current polynomial for later use (setting *this back to original poly)
     Polynomial original(*this);
     
+    //polynomial long division!!
     while (remainder.head != nullptr && (remainder.head->exponent >= other.head->exponent))
     {
+        //finding exponent difference to know what to multiply by during long division
         int expDiff = remainder.head->exponent - other.head->exponent;
         int coeff = remainder.head->coefficient;
 
+        //polynomial for storing divisor's multiple
         Polynomial multiple;
         
+        //polynomial for traversing the divisor
         Node* otherNode = other.head; 
 
+        //building multiple based on current coefficient and the exponent difference
         while (otherNode != nullptr)
         {
+            //calling insert and multiplying coefficients + adding exponents
             multiple.insert(coeff * otherNode->coefficient, expDiff + otherNode->exponent);
             otherNode = otherNode->next;
         }
-        
+
+        //subtracting multiple from remainder
         remainder = (remainder - multiple);
     }
 
-    Polynomial returnPoly = std::move(remainder); // Use std::move to avoid copying
+    //moving remainder polynomial
+    Polynomial returnPoly = std::move(remainder); //using move to avoid copying
+
+    //restoring original polynomia;
     *this = original;
+
+    //returning remainder result!!!
     return returnPoly;
 }

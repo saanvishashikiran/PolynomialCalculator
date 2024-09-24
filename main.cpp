@@ -217,6 +217,16 @@ int main() {
             string input;
             getline(cin, input);
 
+            //trimming leading and trailing whitespace
+            size_t start = input.find_first_not_of(" \t");
+            size_t end = input.find_last_not_of(" \t");
+            if (start == string::npos || end == string::npos) {
+                cout << "Error: Invalid input format. Ensure you include both polynomial and exponent." << endl;
+                continue;
+            }
+            
+            input = input.substr(start, end - start + 1);
+
             //finding the position of the last space in the input
             size_t spacePos = input.find_last_of(' ');
             if (spacePos == string::npos) {
@@ -228,8 +238,8 @@ int main() {
             string polynomialPart = input.substr(0, spacePos);
             int exponent;
             try {
-                exponent = std::stoi(input.substr(spacePos + 1));
-            } catch (const std::invalid_argument&) {
+                exponent = stoi(input.substr(spacePos + 1));
+            } catch (const invalid_argument&) {
                 cout << "Error: Invalid exponent format. It must be an integer." << endl;
                 continue;
             }
@@ -240,8 +250,12 @@ int main() {
                 polynomial1->reset();
             } 
 
-            //initializing the polynomial with the polynomialPart
-            *polynomial1 = Polynomial(polynomialPart);
+            //ensuring polynomial1 is initialized correctly
+            if (polynomial1 == nullptr) {
+                polynomial1 = new Polynomial(polynomialPart); //initializing if null
+            } else {
+                *polynomial1 = Polynomial(polynomialPart); //reseting with new polynomial part
+            }
 
             //performing exponentiation
             polynomial1->exponentiate(exponent);
