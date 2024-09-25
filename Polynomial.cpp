@@ -1,5 +1,4 @@
 #include "Polynomial.h"
-using namespace std;
 
 
 /****************************************************************************
@@ -870,7 +869,7 @@ Polynomial* Polynomial::exponentiate(int n)
     else //if n is even
     {
         Polynomial y = polynomial;
-        y.exponentiate(n/2);
+        y.exponentiate(n/2); //polynomial^(n/2)
         result = y;
         result = result * y; //setting result to y * y
         result.cleanup();

@@ -1,8 +1,4 @@
-#include "Polynomial.h"
-#include <iostream>
-#include <cmath>
-
-using namespace std;
+#include "main.h"
 
 int main() {
     string command = "";
@@ -10,7 +6,9 @@ int main() {
     Polynomial* polynomial2 = nullptr;
 
     cout << "Welcome! To use this polynomial calculator, type a command along with your polynomial in the specified format in a single line (exact same format as listed in test data)." << endl;
-    cout << "Enter one of the following commands: ZERO, ARBITRARY, PRINT, EVAL, ADD, SUB, MULT, EXP, MOD, QUIT followed by the necessary inputs!" << endl;
+    cout << "Please do NOT enter a command and enter without a numerical input in the same line." << endl;
+    cout << "Example input: 'MOD 5 4 6 5 4 -3 3 6 2 -3 1 3 1 2 -3 1 2 0'" << endl;
+    cout << "Enter one of the following commands: ZERO, ARBITRARY, PRINT, EVAL, ADD, SUB, MULT, EXP, MOD, QUIT followed by the necessary numerical inputs!" << endl;
     
     while (true) {
         cout << "> "; 
@@ -34,7 +32,7 @@ int main() {
             polynomial1 = new Polynomial();
             cout << "Polynomial initialized to ZERO." << endl;
             polynomial1->print();
-
+            cout << endl;
 
 
         } else if (command.substr(0,9) == "ARBITRARY") {
