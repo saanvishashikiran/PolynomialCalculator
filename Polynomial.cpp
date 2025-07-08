@@ -9,7 +9,7 @@
 
 /****************************************************************************
  *                 Polynomial Parametrized Constructor                      *
- * Rationale: This consturctor operates by reading in a polynomial string,  *
+ * Rationale: This constructor operates by reading in a polynomial string,  *
  * storing # of terms in a variable, then iterating through the polynomial  *
  * using a for loop to read each term's coefficient and exponent into new   *
  * nodes. This loop is helpful because iterating from i = 0 to the number   *
@@ -24,28 +24,26 @@
  ****************************************************************************/
 
 Polynomial::Polynomial(const std::string& input) : head(nullptr) {
-    //reading in input
     istringstream iss(input);
     int numberOfTerms;
     iss >> numberOfTerms;
 
-    //making a current pointer and initializing to nullptr
     Node* current = nullptr;
 
     //iterating through polynomial
     for (int i = 0; i < numberOfTerms; i++)
     {
         int coefficient, exponent;
-        iss >> coefficient >> exponent; //reading into coefficient and exponent variables
+        iss >> coefficient >> exponent; 
         if (coefficient != 0)
         {
-            Node* newNode = new Node(coefficient, exponent); //initializing node
-            if (head == nullptr) //case where list is empty - adding in new node
+            Node* newNode = new Node(coefficient, exponent); 
+            if (head == nullptr) 
             {
                 head = newNode;
                 current = head;
             }
-            else //case where list is not empty - adding in new node
+            else 
             {
                 current->next = newNode;
                 current = newNode;
@@ -77,7 +75,6 @@ Polynomial::Polynomial(const std::string& input) : head(nullptr) {
  ****************************************************************************/
 
 Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
-    //checking if list is empty
     if (other.head == nullptr)
     {
         return;
@@ -94,7 +91,6 @@ Polynomial::Polynomial(const Polynomial& other) : head(nullptr), tail(nullptr) {
         //creating a new node in current polynomial, copying coeff and exp from source
         currentThis->next = new Node(currentOther->coefficient, currentOther->exponent);
 
-        //moving current and source pointers, respectively
         currentThis = currentThis->next; 
         currentOther = currentOther->next;
     }
@@ -147,7 +143,6 @@ void Polynomial::clear()
         current = next; 
     }
 
-    //avoiding dangling pointers by setting head and tail to nullptr to indicate an empty list
     head = nullptr;  
     tail = nullptr;  
 }
@@ -171,13 +166,11 @@ void Polynomial::insert(int coefficient, int exponent)
     Node* newNode = new Node(coefficient, exponent);
     
     if (!head) {
-        //setting both head and tail to the new node if the list is empty
         head = newNode;
         tail = newNode;
     } else {
-        //linking the new node to the current tail if the list is not empty
-        tail->next = newNode; //setting next of current tail to the new node
-        tail = newNode; //updating the tail to the new node
+        tail->next = newNode; 
+        tail = newNode; 
     }
 }
 
@@ -214,7 +207,6 @@ void Polynomial::insert(int coefficient, int exponent)
  ****************************************************************************/
 
 void Polynomial::cleanup() {
-    //checking if list is empty
     if (!head) return;
 
     Node* current = head;
@@ -270,9 +262,9 @@ void Polynomial::cleanup() {
             }
             delete current;
             if (prev != nullptr) {
-                current = prev->next;  //setting current to the next node if prev isn't null
+                current = prev->next;  
             } else {
-                current = head;        //setting current to head if prev is null
+                current = head;        
             }
         } else {
             //if there are no terms to combine or remove, keep reading through linked list!!
@@ -466,11 +458,11 @@ Polynomial& Polynomial::operator+(const Polynomial& other)
         Node* newNode = new Node(current2->coefficient, current2->exponent);
         if (prev != nullptr) 
         {
-            prev->next = newNode; //linking to previous
+            prev->next = newNode; 
         } 
         else 
         {
-            head = newNode; //setting to head if there is no previous
+            head = newNode; 
         }
 
         //updating previous to new node and moving on
@@ -583,11 +575,11 @@ Polynomial& Polynomial::operator-(const Polynomial& other)
         Node* newNode = new Node(-current2->coefficient, current2->exponent);
         if (prev != nullptr) 
         {
-            prev->next = newNode; //linking to previous
+            prev->next = newNode; 
         } 
         else 
         {
-            head = newNode; //setting to head if there is no previous
+            head = newNode;
         }
 
         //updating previous to new node and moving on
@@ -786,7 +778,7 @@ int Polynomial::evaluate(int x) const
     vector<int> coefficients(highestDegreeExp + 1, 0);
 
     //filling the coefficients array with polynomial terms
-    //rationale: placeholder 0s for missing terms allows for horner's method to function as intended
+    //rationale: placeholder 0s for missing terms allows for method to function as intended
     current = head;
     while (current != nullptr)
     {
@@ -910,7 +902,8 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
 {
     //checking if the divisor is in the valid format (not empty and leading coefficient of 1)
     if (other.head == nullptr || other.head->coefficient != 1)
-    {
+    {   
+        
         cout << "The leading coefficient of the divisor polynomial must be 1 and the divisor polynomial must not be empty." << endl;
         return *this;
     }
@@ -955,3 +948,8 @@ Polynomial Polynomial::operator%=(const Polynomial& other)
     //returning remainder result!!!
     return returnPoly;
 }
+
+
+
+
+
