@@ -22,7 +22,7 @@ A C++ program that performs arithmetic and structural operations on single-varia
 
 Each polynomial is defined by: <int> (<int> <int>)*
 
-- The first `<int>` indicates the number of terms.
+- The first `<int>` indicates the number of terms
 - Each subsequent pair represents a term: `<coefficient> <exponent>`
 
 ### Example:
@@ -33,7 +33,7 @@ Represents the polynomial: -24x^5 + 62x^3 - 31x + 2
 ## Instructions for compiling and running code:
 
 - Compile by typing "make" into the command line and hitting enter
-- Run code by typing "./a.out" into the command line and hitting enter.
+- Run code by typing "./a.out" into the command line and hitting enter
 
 ## Supported Commands
 
